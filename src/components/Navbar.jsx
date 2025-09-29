@@ -8,6 +8,7 @@ const Navbar = () => {
       <div className="logo">Club Atlético Quilmes</div>
       <ul className="nav-links">
         <li><Link to="/">Inicio</Link></li>
+            <li><Link to="/calendario">Calendario</Link></li>
         <li className="dropdown">
           <span>Deportes ▾</span>
           <ul className="dropdown-menu">

@@ -6,7 +6,7 @@
   align-items: center;
   background-color: #0b1220; /* más oscuro para contraste del glow */
   color: white;
-  padding: 40px;
+  padding: 20px;
   height: 100vh;
   width: 100vw;
   gap: 40px;
@@ -59,6 +59,7 @@
 }
 
 .shield-scene {
+    
   position: relative;
   width: 300px;
   height: 300px;
@@ -69,6 +70,7 @@
 
 /* Anillos giratorios / halo */
 .shield-ring {
+      margin-top: -200px;
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
@@ -77,6 +79,7 @@
 }
 
 .ring-1 {
+    
   width: 340px;
   height: 340px;
   border: 2px solid rgba(59,130,246,0.08);
@@ -86,6 +89,7 @@
 }
 
 .ring-2 {
+    
   width: 380px;
   height: 380px;
   border: 1px dashed rgba(255,255,255,0.03);
@@ -94,18 +98,21 @@
 
 /* Glow difuso detrás del escudo */
 .shield-glow {
+    
   position: absolute;
   width: 260px;
   height: 260px;
   border-radius: 50%;
   background: radial-gradient(closest-side, rgba(59,130,246,0.18), rgba(59,130,246,0.04) 50%, transparent 60%);
   filter: blur(18px);
-  transform: translateY(6px);
+  transform: translateY(-60px);
+  
   pointer-events: none;
 }
 
 /* Container que rota/tilt (referencia para transformaciones) */
 .shield-container {
+    
   width: 240px;
   height: 240px;
   border-radius: 9999px;
@@ -137,9 +144,10 @@
 
 /* Shine: barra brillante que atraviesa el escudo */
 .shield-shine {
+  
   position: absolute;
-  top: -40%;
-  left: -30%;
+  top: -95%;
+  left:25%;
   width: 60%;
   height: 200%;
   transform: rotate(-25deg) translateX(-30%);
