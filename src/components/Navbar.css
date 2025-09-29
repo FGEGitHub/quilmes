@@ -4,7 +4,8 @@
   align-items: center;
   background: #111827;
   color: white;
-  padding: 15px 40px;
+  padding: 15px 20px;
+  position: relative;
 }
 
 .logo {
@@ -13,6 +14,7 @@
   color: #3b82f6;
 }
 
+/* Links de escritorio */
 .nav-links {
   display: flex;
   gap: 20px;
@@ -44,6 +46,7 @@
   list-style: none;
   padding: 10px 0;
   border-radius: 6px;
+  z-index: 10;
 }
 
 .dropdown:hover .dropdown-menu {
@@ -62,8 +65,20 @@
   color: #3b82f6;
 }
 
+/* Botón Hamburguesa */
+.menu-toggle {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: white;
+}
+
 /* 📱 Responsive */
 @media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
   .nav-links {
     display: none;
     flex-direction: column;
@@ -71,11 +86,24 @@
     position: absolute;
     top: 60px;
     right: 0;
-    width: 200px;
+    width: 220px;
     padding: 20px;
+    border-radius: 6px;
   }
 
   .nav-links.active {
     display: flex;
+  }
+
+  .dropdown:hover .dropdown-menu {
+    position: relative;
+    top: 0;
+    left: 0;
+    background: transparent;
+    padding: 0;
+  }
+
+  .dropdown-menu li {
+    padding: 8px 0;
   }
 }
