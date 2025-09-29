@@ -1,14 +1,14 @@
+/* base hero (tu estilo previo adaptado) */
 .hero {
   display: flex;
   flex-direction: row;
   justify-content: center;
-
   align-items: center;
-  background-color: #111827;
+  background-color: #0b1220; /* más oscuro para contraste del glow */
   color: white;
   padding: 40px;
-      height: 100vh; /* Ocupa toda la pantalla */
-    width: 97vw; /* Ocupa toda la pantalla */
+  height: 100vh;
+  width: 100vw;
   gap: 40px;
   flex-wrap: wrap;
   text-align: center;
@@ -35,9 +35,9 @@
 }
 
 .btn {
-  background-color: #3b82f6;
+  background-color: #3b82f6 !important;
   padding: 12px 24px;
-  color: white;
+  color: white !important;
   border-radius: 6px;
   text-decoration: none;
   transition: background 0.3s;
@@ -45,41 +45,202 @@
 }
 
 .btn:hover {
-  background-color: #2563eb;
+  background-color: #2563eb !important;
 }
 
+/* ====== Shield scene ====== */
 .hero-image {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 280px;
+  min-height: 280px;
 }
 
-.hero-image img {
+.shield-scene {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
+}
+
+/* Anillos giratorios / halo */
+.shield-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.8;
+}
+
+.ring-1 {
+  width: 340px;
+  height: 340px;
+  border: 2px solid rgba(59,130,246,0.08);
+  animation: ring-rotate 8s linear infinite;
+  transform-origin: center;
+  box-shadow: 0 0 40px rgba(59,130,246,0.12);
+}
+
+.ring-2 {
+  width: 380px;
+  height: 380px;
+  border: 1px dashed rgba(255,255,255,0.03);
+  animation: ring-rotate-rev 14s linear infinite;
+}
+
+/* Glow difuso detrás del escudo */
+.shield-glow {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(59,130,246,0.18), rgba(59,130,246,0.04) 50%, transparent 60%);
+  filter: blur(18px);
+  transform: translateY(6px);
+  pointer-events: none;
+}
+
+/* Container que rota/tilt (referencia para transformaciones) */
+.shield-container {
   width: 240px;
   height: 240px;
-  object-fit: cover;
   border-radius: 9999px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
+  transition: transform 350ms cubic-bezier(.2,.9,.3,1), box-shadow 250ms;
+  will-change: transform;
+  animation: floaty 6s ease-in-out infinite;
+  z-index: 4;
+  overflow: visible;
 }
 
-/* 📱 Responsive para pantallas pequeñas */
+/* Imagen redonda del escudo */
+.shield-img {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 9999px;
+  border: 3px solid rgba(255,255,255,0.04);
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.6),
+    inset 0 -6px 16px rgba(0,0,0,0.35);
+  display: block;
+  transform: translateZ(0); /* para mejorar GPU compositing */
+}
+
+/* Shine: barra brillante que atraviesa el escudo */
+.shield-shine {
+  position: absolute;
+  top: -40%;
+  left: -30%;
+  width: 60%;
+  height: 200%;
+  transform: rotate(-25deg) translateX(-30%);
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.18), rgba(255,255,255,0));
+  filter: blur(8px);
+  opacity: 0.0;
+  pointer-events: none;
+  animation: shine-move 2.6s ease-in-out infinite 1.2s;
+  z-index: 6;
+  mix-blend-mode: screen;
+}
+
+/* Insignia/Badge superior (opcional) */
+.shield-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: linear-gradient(180deg,#f59e0b,#b45309);
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(181,83,9,0.25);
+  z-index: 8;
+  transform: translateZ(20px);
+}
+
+/* Partículas sutiles alrededor (aparece y desaparece) */
+.particles {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.06) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.04) 0 1px, transparent 3px),
+    radial-gradient(circle at 40% 80%, rgba(59,130,246,0.03) 0 2px, transparent 4px);
+  animation: particles-fade 6s ease-in-out infinite;
+  filter: blur(2px);
+}
+
+/* ====== Keyframes ====== */
+@keyframes floaty {
+  0% { transform: translateY(0px) rotateZ(0deg); }
+  50% { transform: translateY(-10px) rotateZ(0.6deg); }
+  100% { transform: translateY(0px) rotateZ(0deg); }
+}
+
+@keyframes ring-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes ring-rotate-rev {
+  0% { transform: rotate(0deg) scale(1); opacity: .95; }
+  50% { opacity: .65; }
+  100% { transform: rotate(-360deg) scale(1); opacity: .95; }
+}
+
+@keyframes shine-move {
+  0% { opacity: 0; transform: rotate(-25deg) translateX(-50%); }
+  15% { opacity: 0.65; transform: rotate(-25deg) translateX(-20%); }
+  60% { opacity: 0.45; transform: rotate(-25deg) translateX(20%); }
+  100% { opacity: 0; transform: rotate(-25deg) translateX(70%); }
+}
+
+@keyframes particles-fade {
+  0% { opacity: 0.0; transform: scale(0.98); }
+  40% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.0; transform: scale(1.02); }
+}
+
+/* ====== Responsivo ====== */
 @media (max-width: 768px) {
   .hero {
     flex-direction: column;
-
     padding: 60px 20px;
     text-align: center;
-    margin: 0; /* Asegura que no haya margen arriba */
+    margin: 0;
   }
 
   .hero-text h1 {
     font-size: 32px;
   }
 
-  .hero-image img {
-    width: 200px;
-    height: 200px;
-    margin-top: -200px;
+  .shield-scene { width: 220px; height: 220px; }
+  .shield-container { width: 180px; height: 180px; }
+  .shield-img { width: 160px; height: 160px; }
+  .shield-glow { width: 200px; height: 200px; }
+}
+
+/* ====== Accesibilidad / reducción de movimiento ====== */
+@media (prefers-reduced-motion: reduce) {
+  .shield-container,
+  .shield-ring,
+  .particles,
+  .shield-shine {
+    animation: none !important;
+    transition: none !important;
   }
 }

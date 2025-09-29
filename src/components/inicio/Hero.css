@@ -1,0 +1,42 @@
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #111827;
+  color: white;
+  padding: 60px;
+  gap: 40px;
+  flex-wrap: wrap;
+  height: 90vh;
+  text-align: center;
+}
+
+.hero-text h1 {
+  font-size: 40px;
+}
+
+.highlight {
+  color: #3b82f6;
+}
+
+.hero-text p {
+  color: #9ca3af;
+  font-size: 18px;
+}
+
+.hero-image img {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+  }
+  .hero-image img {
+    width: 200px;
+    height: 200px;
+  }
+}
