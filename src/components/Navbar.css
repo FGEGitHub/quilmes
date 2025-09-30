@@ -8,7 +8,7 @@
   position: fixed;     /* 🔥 navbar fijo arriba */
   top: 0;
   left: 0;
-  width: 100%;         /* 🔥 siempre ancho completo */
+  width: 100vw;         /* 🔥 siempre ancho completo */
   z-index: 1000;       /* queda por encima del resto */
   box-shadow: 0 2px 6px rgba(0,0,0,0.4); /* sutil sombra */
 }
@@ -86,7 +86,9 @@ body {
   .menu-toggle {
     display: block;
   }
-
+  .menu-icon {
+    display: block; /* aparece el ícono */
+  }
   .nav-links {
     display: none;
     flex-direction: column;
@@ -98,7 +100,20 @@ body {
     padding: 20px;
     border-radius: 6px;
   }
+.menu-links {
+    display: none; /* oculto por defecto */
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    background: #1f2937;
+    padding: 15px 0;
+  }
 
+  .menu-links.open {
+    display: flex; /* aparece al tocar el ícono */
+  }
   .nav-links.active {
     display: flex;
   }

@@ -8,9 +8,23 @@
   },
   {
     "evento": "Quilmes vs Club X",
-    "deporte": "basquet",
+    "deporte": "futbol-masculino",
     "detalle": "Liga provincial",
-    "fecha": "12/12/2025",
+    "fecha": "02/10/2025",
     "categoria": "U18"
+  },
+    {
+    "evento": "Quilmes vs Club X",
+    "deporte": "hockey-masculino",
+    "detalle": "Liga provincial",
+    "fecha": "02/10/2025",
+    "categoria": "C-11"
+  },
+      {
+    "evento": "Quilmes vs Club X",
+    "deporte": "cesto",
+    "detalle": "Liga provincial",
+    "fecha": "03/10/2025",
+    "categoria": "C-13"
   }
 ]
