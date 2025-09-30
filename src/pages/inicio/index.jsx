@@ -3,7 +3,8 @@ import quilmes from "../../assets/quilmes.jpeg";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import "./index1.css";
-
+import Nav from "../../components/Navbar";
+import Footer from "../../components/Footer";
 const HeroSection = () => {
   const navigate = useNavigate();
   const shieldRef = useRef(null);
@@ -36,7 +37,10 @@ const HeroSection = () => {
     el.style.transform = "";
   };
 
-  return (
+  return (<><Nav/>
+  
+  
+
     <section className="hero">
       <div className="hero-text">
         <h1>
@@ -70,6 +74,9 @@ const HeroSection = () => {
         </div>
       </div>
     </section>
+
+<Footer  />
+      </>
   );
 };
 
