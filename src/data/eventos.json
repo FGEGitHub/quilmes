@@ -1,0 +1,16 @@
+[
+  {
+    "evento": "Partido Quilmes vs Central",
+    "deporte": "futbol-femenino",
+    "detalle": "Semifinal torneo regional",
+    "fecha": "01/10/2025",
+    "categoria": "Primera"
+  },
+  {
+    "evento": "Quilmes vs Club X",
+    "deporte": "basquet",
+    "detalle": "Liga provincial",
+    "fecha": "12/12/2025",
+    "categoria": "U18"
+  }
+]
