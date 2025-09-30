@@ -64,7 +64,7 @@ const HeroSection = () => {
           <div className="shield-container" ref={shieldRef}>
             <img src={quilmes} alt="Escudo Quilmes" className="shield-img" />
             <div className="shield-shine" />
-            <div className="shield-badge">40 AÑOS</div>
+            <div className="shield-badge">#40AÑOS</div>
           </div>
           <div className="particles" />
         </div>

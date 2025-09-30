@@ -1,15 +1,16 @@
 /* base hero (tu estilo previo adaptado) */
 .hero {
+   margin-top: -13%;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   background-color: #0b1220; /* más oscuro para contraste del glow */
   color: white;
-  padding: 20px;
+  
   height: 100vh;
   width: 100vw;
-  gap: 40px;
+ 
   flex-wrap: wrap;
   text-align: center;
 }
@@ -21,7 +22,7 @@
 
 .hero-text h1 {
   font-size: 40px;
-  margin-bottom: 16px;
+  margin-top: 16px;
 }
 
 .hero-text .highlight {
@@ -50,6 +51,7 @@
 
 /* ====== Shield scene ====== */
 .hero-image {
+  
   flex: 1;
   display: flex;
   justify-content: center;
@@ -70,7 +72,7 @@
 
 /* Anillos giratorios / halo */
 .shield-ring {
-      margin-top: -200px;
+      margin-top: -20px;
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
@@ -130,6 +132,7 @@
 
 /* Imagen redonda del escudo */
 .shield-img {
+  
   width: 220px;
   height: 220px;
   object-fit: cover;
@@ -146,10 +149,10 @@
 .shield-shine {
   
   position: absolute;
-  top: -95%;
+  top: -15%;
   left:25%;
   width: 60%;
-  height: 200%;
+  height: 130%;
   transform: rotate(-25deg) translateX(-30%);
   background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.18), rgba(255,255,255,0));
   filter: blur(8px);
@@ -226,10 +229,12 @@
 /* ====== Responsivo ====== */
 @media (max-width: 768px) {
   .hero {
+
     flex-direction: column;
     padding: 60px 20px;
     text-align: center;
     margin: 0;
+     margin-top: -10px;
   }
 
   .hero-text h1 {
@@ -240,6 +245,30 @@
   .shield-container { width: 180px; height: 180px; }
   .shield-img { width: 160px; height: 160px; }
   .shield-glow { width: 200px; height: 200px; }
+   .shield-shine {
+    top: -95%;       /* menos negativo para que se ajuste al escudo más pequeño */
+    left: 20%;       /* centrar mejor */
+    width: 50%;
+    height: 180%;
+    transform: rotate(-25deg) translateX(-20%);
+  }
+  .shield-ring {
+      margin-top: -200px;
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.8;
+}
+.hero-image {
+  margin-top: -80%;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 280px;
+  min-height: 280px;
+}
 }
 
 /* ====== Accesibilidad / reducción de movimiento ====== */
