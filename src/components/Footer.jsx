@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="footer">
       <p>© 2025 Club Atlético Quilmes - Todos los derechos reservados</p>
       <div className="socials">
-        <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
+        <a href="https://www.instagram.com/quilmes.corrientes/">Facebook</a> | <a href="https://www.instagram.com/quilmes.corrientes/">Instagram</a> | <a href="https://www.instagram.com/quilmes.corrientes/">Twitter</a>
       </div>
     </footer>
   );

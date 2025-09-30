@@ -4,14 +4,41 @@
   text-align: center;
   padding: 20px;
   margin-top: auto;
+  width: 98vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Contenedor de los links */
+.footer-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap; /* si son muchos, que bajen */
+  justify-content: center;
+  margin-top: 10px;
 }
 
 .footer a {
   color: #3b82f6;
   text-decoration: none;
-  margin: 0 10px;
+  font-size: 14px;
 }
 
 .footer a:hover {
   text-decoration: underline;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .footer-links {
+    flex-direction: column; /* de fila → columna */
+    gap: 10px;
+    align-items: center;
+    width: 92vw; /* que ocupe todo el ancho */
+  }
+
+  .footer a {
+    font-size: 16px; /* un poquito más grande en mobile */
+  }
 }

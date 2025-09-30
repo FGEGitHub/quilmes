@@ -8,7 +8,7 @@
   position: fixed;     /* 🔥 navbar fijo arriba */
   top: 0;
   left: 0;
-  width: 100vw;         /* 🔥 siempre ancho completo */
+  width: 97vw;         /* 🔥 siempre ancho completo */
   z-index: 1000;       /* queda por encima del resto */
   box-shadow: 0 2px 6px rgba(0,0,0,0.4); /* sutil sombra */
 }
@@ -83,6 +83,9 @@ body {
 
 /* 📱 Responsive */
 @media (max-width: 768px) {
+  .navbar {
+  width: 93vw;  /* Asegura que el navbar ocupe todo el ancho en móvil */
+  }
   .menu-toggle {
     display: block;
   }
