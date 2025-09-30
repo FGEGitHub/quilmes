@@ -40,7 +40,7 @@ const HeroSection = () => {
     <section className="hero">
       <div className="hero-text">
         <h1>
-          Simos <span className="highlight">Club Atlético Quilmes</span>
+          Somos <span className="highlight">Club Atlético Quilmes</span>
         </h1>
         <p>#40Años</p>
         <Button
