@@ -84,7 +84,7 @@ body {
 /* 📱 Responsive */
 @media (max-width: 768px) {
   .navbar {
-  width: 93vw;  /* Asegura que el navbar ocupe todo el ancho en móvil */
+  width: 95vw;  /* Asegura que el navbar ocupe todo el ancho en móvil */
   }
   .menu-toggle {
     display: block;

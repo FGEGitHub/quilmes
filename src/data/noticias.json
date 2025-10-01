@@ -1,0 +1,50 @@
+[
+  {
+    "titulo": "Victoria en el clásico",
+    "contenido": "Nuestro equipo de Primera ganó 3-1 en un partido vibrante ante el rival histórico.",
+    "pie": "Fuente: Prensa Club Quilmes",
+    "imagen": "clasico.jpg",
+    "fecha": "30/09/2025",
+    "hora": "19:00"
+  },
+  {
+    "titulo": "Nueva indumentaria 2025",
+    "contenido": "Se presentó la camiseta oficial de la temporada con un diseño renovado.",
+    "pie": "Club Quilmes Oficial",
+    "imagen": "camiseta2025.jpg",
+    "fecha": "15/09/2025",
+    "hora": "11:00"
+  },
+  {
+    "titulo": "Inauguración de canchas auxiliares",
+    "contenido": "Se habilitaron dos nuevas canchas para entrenamiento de divisiones juveniles.",
+    "pie": "Subcomisión de Infraestructura",
+    "imagen": "canchas.jpg",
+    "fecha": "05/09/2025",
+    "hora": "16:30"
+  },
+  {
+    "titulo": "Escuelita de fútbol",
+    "contenido": "Ya está abierta la inscripción para niños y niñas de 6 a 12 años.",
+    "pie": "Coordinación de Fútbol Infantil",
+    "imagen": "escuelita.jpg",
+    "fecha": "20/08/2025",
+    "hora": "10:00"
+  },
+  {
+    "titulo": "Encuentro de hockey",
+    "contenido": "El equipo de hockey femenino disputó una jornada amistosa con clubes de la región.",
+    "pie": "Departamento de Hockey",
+    "imagen": "hockey.jpg",
+    "fecha": "10/08/2025",
+    "hora": "14:00"
+  },
+  {
+    "titulo": "Atletismo en ascenso",
+    "contenido": "Los atletas del club participaron en un torneo provincial con excelentes resultados.",
+    "pie": "Área de Atletismo",
+    "imagen": "atletismo.jpg",
+    "fecha": "01/08/2025",
+    "hora": "09:00"
+  }
+]
