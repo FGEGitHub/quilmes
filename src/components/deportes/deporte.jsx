@@ -38,36 +38,60 @@ const Deporte = () => {
     setPartidos(eventosData.filter((e) => e.deporte === deporte));
   }, [deporte]);
 
-  const handleJugadorSelect = (j) => {
-    setJugadorSel(j);
+const handleJugadorSelect = (j) => {
+  setJugadorSel(j);
 
-    try {
-      const img = require(`../../assets/${normalizarNombre(j.Nombre)}.png`);
-      setImagenActual(img);
-    } catch (error) {
-      setImagenActual(escudo); // fallback
-    }
-  };
+  const basePath = `/assets/jugadores/${normalizarNombre(j.Nombre)}`;
+  const posiblesExtensiones = [".jpeg", ".jpg", ".png"];
+
+  // probamos rutas
+  let imgUrl = null;
+  for (let ext of posiblesExtensiones) {
+    const testUrl = `${basePath}${ext}`;
+    // no podemos verificar si existe con require, pero sí con carga dinámica
+    imgUrl = testUrl;
+    break;
+  }
+
+  setImagenActual(imgUrl || escudo);
+};
 
   return (
     <section className="deporte-section">
       {/* Imagen con transición */}
       <div className="deporte-image">
         <AnimatePresence mode="wait">
-          <motion.img
-            key={imagenActual}
-            src={imagenActual}
-            alt="Imagen jugador o escudo"
-            className="escudo-img"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            onError={(e) => (e.target.src = escudo)}
-          />
-        </AnimatePresence>
-      </div>
+         <motion.img
+  key={imagenActual}
+  src={imagenActual}
+  alt="Imagen jugador o escudo"
+  className="escudo-img"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  transition={{ duration: 0.5 }}
+  onError={(e) => (e.target.src = escudo)}
+/>
 
+        </AnimatePresence>
+        
+        {/* Info jugador */}
+  
+      </div>
+      {jugadorSel && (
+          <Card className="deporte-card">
+            <CardContent>
+              <Typography variant="h6">{jugadorSel.Nombre} {jugadorSel.apodo && " Apodo: "+jugadorSel.apodo }</Typography>
+              <Typography>Posición: {jugadorSel.posicion}</Typography>
+              <Typography>Pierna hábil: {jugadorSel.pierna_habil}</Typography>
+              <Typography>
+                Nacimiento:{" "}
+                {new Date(jugadorSel.fecha_nacimiento).toLocaleDateString()}
+              </Typography>
+              <Typography>Categoría: {jugadorSel.categoria}</Typography>
+            </CardContent>
+          </Card>
+        )}
       {/* Contenido */}
       <div className="deporte-content">
         <h2>🏆 {deporte.replace("-", " ").toUpperCase()}</h2>
@@ -92,21 +116,6 @@ const Deporte = () => {
           </AccordionDetails>
         </Accordion>
 
-        {/* Info jugador */}
-        {jugadorSel && (
-          <Card className="deporte-card">
-            <CardContent>
-              <Typography variant="h6">{jugadorSel.Nombre}</Typography>
-              <Typography>Posición: {jugadorSel.posicion}</Typography>
-              <Typography>Pierna hábil: {jugadorSel.pierna_habil}</Typography>
-              <Typography>
-                Nacimiento:{" "}
-                {new Date(jugadorSel.fecha_nacimiento).toLocaleDateString()}
-              </Typography>
-              <Typography>Categoría: {jugadorSel.categoria}</Typography>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Acordeón Partidos */}
         <Accordion>

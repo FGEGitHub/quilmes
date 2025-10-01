@@ -1,4 +1,14 @@
 [
+   {
+    "Nombre": "Nahuel Basante",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "apodo":"Vara",
+    "fecha_nacimiento": "2003-06-12",
+    "posicion": "Arquero"
+  },
   {
     "Nombre": "Gonzalo Brites",
     "deporte": "futbol-masculino",
