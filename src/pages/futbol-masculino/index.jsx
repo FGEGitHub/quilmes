@@ -1,6 +1,6 @@
 import React from "react";
 
-import Componente from "../../components/deportes/futbol-masculino";
+import Componente from "../../components/deportes/deporte";
 import Nav from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { useNavigate } from "react-router-dom";

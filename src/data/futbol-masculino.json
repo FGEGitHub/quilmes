@@ -5,6 +5,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Primera",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2003-06-12",
     "posicion": "Delantero"
   },
@@ -14,6 +15,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Sub-15",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2010-11-05",
     "posicion": "Mediocampista"
   },
@@ -23,6 +25,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Sub-13",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2012-07-28",
     "posicion": "Delantero"
   },
@@ -32,6 +35,7 @@
     "detalle": "",
     "pierna_habil": "izquierda",
     "categoria": "Sub-13",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2011-10-19",
     "posicion": "Defensor"
   },
@@ -41,6 +45,7 @@
     "detalle": "",
     "pierna_habil": "izquierda",
     "categoria": "Reserva",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2001-09-02",
     "posicion": "Arquero"
   },
@@ -50,6 +55,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Reserva",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2002-04-21",
     "posicion": "Delantero"
   },
@@ -59,6 +65,7 @@
     "detalle": "",
     "pierna_habil": "izquierda",
     "categoria": "Primera",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2003-08-14",
     "posicion": "Defensor"
   },
@@ -68,6 +75,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Primera",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2002-12-05",
     "posicion": "Mediocampista"
   },
@@ -77,6 +85,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Sub-15",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2010-03-22",
     "posicion": "Delantero"
   },
@@ -86,6 +95,7 @@
     "detalle": "",
     "pierna_habil": "izquierda",
     "categoria": "Sub-15",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2009-07-11",
     "posicion": "Defensor"
   },
@@ -95,6 +105,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Primera",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2003-02-28",
     "posicion": "Delantero"
   },
@@ -104,6 +115,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Sub-13",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2011-05-18",
     "posicion": "Mediocampista"
   },
@@ -113,6 +125,7 @@
     "detalle": "",
     "pierna_habil": "izquierda",
     "categoria": "Sub-13",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2012-08-12",
     "posicion": "Delantero"
   },
@@ -122,6 +135,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Reserva",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2002-11-22",
     "posicion": "Mediocampista"
   },
@@ -131,6 +145,7 @@
     "detalle": "",
     "pierna_habil": "izquierda",
     "categoria": "Primera",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2003-04-17",
     "posicion": "Defensor"
   },
@@ -140,6 +155,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Primera",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2002-06-09",
     "posicion": "Arquero"
   },
@@ -149,6 +165,7 @@
     "detalle": "",
     "pierna_habil": "izquierda",
     "categoria": "Sub-15",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2009-09-25",
     "posicion": "Mediocampista"
   },
@@ -158,6 +175,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Sub-15",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2010-01-14",
     "posicion": "Delantero"
   },
@@ -167,6 +185,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Sub-13",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2011-12-02",
     "posicion": "Defensor"
   },
@@ -176,6 +195,7 @@
     "detalle": "",
     "pierna_habil": "izquierda",
     "categoria": "Reserva",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2001-05-19",
     "posicion": "Arquero"
   },
@@ -185,6 +205,7 @@
     "detalle": "",
     "pierna_habil": "derecha",
     "categoria": "Primera",
+    "apodo":"Sin apodo",
     "fecha_nacimiento": "2002-08-30",
     "posicion": "Mediocampista"
   }

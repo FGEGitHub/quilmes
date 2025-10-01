@@ -1,10 +1,11 @@
 [
   {
-    "Nombre": "Fernando Gomez",
+    "Nombre": "Cinthia Gomez",
     "deporte": "futbol-femenino",
     "detalle": "",
     "pierna_habil": "derecha",
-    "categoria": "Primera",
+     "apodo":"Sin apodo",
+     "categoria": "Primera",
     "fecha_nacimiento": "2005-10-01",
     "posicion": "Arquero"
   },
@@ -13,7 +14,8 @@
     "deporte": "futbol-femenino",
     "detalle": "",
     "pierna_habil": "izquierda",
-    "categoria": "Primera",
+     "apodo":"Sin apodo",
+     "categoria": "Primera",
     "fecha_nacimiento": "2006-03-22",
     "posicion": "Defensora"
   },
@@ -22,7 +24,8 @@
     "deporte": "futbol-femenino",
     "detalle": "",
     "pierna_habil": "derecha",
-    "categoria": "Sub-16",
+     "apodo":"Sin apodo",
+     "categoria": "Sub-16",
     "fecha_nacimiento": "2008-01-15",
     "posicion": "Mediocampista"
   },
@@ -31,7 +34,8 @@
     "deporte": "futbol-femenino",
     "detalle": "",
     "pierna_habil": "izquierda",
-    "categoria": "Primera",
+     "apodo":"Sin apodo",
+     "categoria": "Primera",
     "fecha_nacimiento": "2004-08-18",
     "posicion": "Delantera"
   },
@@ -40,7 +44,8 @@
     "deporte": "futbol-femenino",
     "detalle": "",
     "pierna_habil": "derecha",
-    "categoria": "Sub-18",
+     "apodo":"Sin apodo",
+     "categoria": "Sub-18",
     "fecha_nacimiento": "2007-12-10",
     "posicion": "Defensora"
   },
@@ -49,7 +54,8 @@
     "deporte": "futbol-femenino",
     "detalle": "",
     "pierna_habil": "izquierda",
-    "categoria": "Sub-18",
+     "apodo":"Sin apodo",
+     "categoria": "Sub-18",
     "fecha_nacimiento": "2006-05-20",
     "posicion": "Mediocampista"
   },
@@ -58,7 +64,8 @@
     "deporte": "futbol-femenino",
     "detalle": "",
     "pierna_habil": "derecha",
-    "categoria": "Sub-16",
+     "apodo":"Sin apodo",
+     "categoria": "Sub-16",
     "fecha_nacimiento": "2008-09-30",
     "posicion": "Delantera"
   },
@@ -67,7 +74,8 @@
     "deporte": "futbol-femenino",
     "detalle": "",
     "pierna_habil": "derecha",
-    "categoria": "Primera",
+     "apodo":"Sin apodo",
+     "categoria": "Primera",
     "fecha_nacimiento": "2005-11-11",
     "posicion": "Arquero"
   },
@@ -76,7 +84,8 @@
     "deporte": "futbol-femenino",
     "detalle": "",
     "pierna_habil": "izquierda",
-    "categoria": "Sub-18",
+     "apodo":"Sin apodo",
+     "categoria": "Sub-18",
     "fecha_nacimiento": "2006-04-03",
     "posicion": "Defensora"
   },
@@ -85,7 +94,8 @@
     "deporte": "futbol-femenino",
     "detalle": "",
     "pierna_habil": "derecha",
-    "categoria": "Sub-16",
+     "apodo":"Sin apodo",
+     "categoria": "Sub-16",
     "fecha_nacimiento": "2008-06-17",
     "posicion": "Mediocampista"
   }

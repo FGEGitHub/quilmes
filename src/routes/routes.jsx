@@ -12,12 +12,7 @@ const Rutas = [
 { path: '/principal', element: <Principal /> },
 { path: '/calendario', element: <Calendario /> },
 
-{ path: '/deportes/futbol-masculino', element: <FutbolM /> },
-{ path: '/deportes/futbol-feminino', element: <FutbolF /> },
-{ path: '/deportes/hockey-masculino', element: <FutbolM /> },
-{ path: '/deportes/hockey-femenino', element: <FutbolM /> },
-{ path: '/deportes/cesto', element: <FutbolM /> },
-
+{ path: '/deportes/:deporte', element: <FutbolM /> },
     ];
 
 

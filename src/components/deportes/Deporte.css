@@ -1,0 +1,49 @@
+.deporte-section {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  flex-wrap: wrap;
+}
+
+.deporte-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.escudo-img {
+  max-width: 250px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.25);
+  transition: all 0.4s ease-in-out;
+}
+
+.deporte-content {
+  flex: 2;
+  min-width: 300px;
+}
+
+.deporte-card {
+  margin-top: 1rem;
+  border-radius: 16px;
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .deporte-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .deporte-image {
+    margin-bottom: 1.5rem;
+  }
+
+  .escudo-img {
+    max-width: 180px;
+  }
+}
