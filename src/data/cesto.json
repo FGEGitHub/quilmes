@@ -1,0 +1,221 @@
+
+
+[
+  {
+    "Nombre": "Fernando Gomez",
+    "deporte": "futbol-femenino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2005-10-01",
+    "posicion": "Arquero"
+  },
+  {
+    "Nombre": "Lucia Perez",
+    "deporte": "futbol-femenino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2006-03-22",
+    "posicion": "Defensora"
+  },
+  {
+    "Nombre": "Camila Torres",
+    "deporte": "futbol-femenino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-16",
+    "fecha_nacimiento": "2008-01-15",
+    "posicion": "Mediocampista"
+  },
+  {
+    "Nombre": "Valentina Rojas",
+    "deporte": "futbol-femenino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2004-08-18",
+    "posicion": "Delantera"
+  },
+  {
+    "Nombre": "Sofia Alvarez",
+    "deporte": "futbol-femenino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-18",
+    "fecha_nacimiento": "2007-12-10",
+    "posicion": "Defensora"
+  },
+  {
+    "Nombre": "Martina Suarez",
+    "deporte": "futbol-femenino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Sub-18",
+    "fecha_nacimiento": "2006-05-20",
+    "posicion": "Mediocampista"
+  },
+  {
+    "Nombre": "Ana Fernandez",
+    "deporte": "futbol-femenino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-16",
+    "fecha_nacimiento": "2008-09-30",
+    "posicion": "Delantera"
+  },
+  {
+    "Nombre": "Maria Lopez",
+    "deporte": "futbol-femenino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2005-11-11",
+    "posicion": "Arquero"
+  },
+  {
+    "Nombre": "Isabella Sanchez",
+    "deporte": "futbol-femenino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Sub-18",
+    "fecha_nacimiento": "2006-04-03",
+    "posicion": "Defensora"
+  },
+  {
+    "Nombre": "Juliana Diaz",
+    "deporte": "futbol-femenino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-16",
+    "fecha_nacimiento": "2008-06-17",
+    "posicion": "Mediocampista"
+  },
+  {
+    "Nombre": "Gonzalo Brites",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2003-06-12",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Matias Suarez",
+    "deporte": "futbol-masculino-c-15",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-15",
+    "fecha_nacimiento": "2010-11-05",
+    "posicion": "Mediocampista"
+  },
+  {
+    "Nombre": "Federico Diaz",
+    "deporte": "futbol-masculino-c-13",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-13",
+    "fecha_nacimiento": "2012-07-28",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Agustin Morales",
+    "deporte": "futbol-masculino-c-13",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Sub-13",
+    "fecha_nacimiento": "2011-10-19",
+    "posicion": "Defensor"
+  },
+  {
+    "Nombre": "Lucas Fernandez",
+    "deporte": "futbol-masculino-reserva",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Reserva",
+    "fecha_nacimiento": "2001-09-02",
+    "posicion": "Arquero"
+  },
+  {
+    "Nombre": "Diego Herrera",
+    "deporte": "futbol-masculino-reserva",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Reserva",
+    "fecha_nacimiento": "2002-04-21",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Juan Martinez",
+    "deporte": "hockey-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2002-05-30",
+    "posicion": "Defensor"
+  },
+  {
+    "Nombre": "Pedro Ramirez",
+    "deporte": "hockey-masculino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Sub-20",
+    "fecha_nacimiento": "2004-12-12",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Valentin Castillo",
+    "deporte": "hockey-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2003-09-07",
+    "posicion": "Arquero"
+  },
+  {
+    "Nombre": "Valentina Rojas",
+    "deporte": "hockey-femenino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2004-08-18",
+    "posicion": "Delantera"
+  },
+  {
+    "Nombre": "Isabella Sanchez",
+    "deporte": "hockey-femenino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-18",
+    "fecha_nacimiento": "2006-04-03",
+    "posicion": "Arquera"
+  },
+  {
+    "Nombre": "Sofia Alvarez",
+    "deporte": "cesto",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2003-12-10",
+    "posicion": "Base"
+  },
+  {
+    "Nombre": "Martin Lopez",
+    "deporte": "cesto",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Sub-20",
+    "fecha_nacimiento": "2005-09-11",
+    "posicion": "Alero"
+  },
+  {
+    "Nombre": "Carlos Medina",
+    "deporte": "cesto",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2004-07-22",
+    "posicion": "Pivot"
+  }
+]
+

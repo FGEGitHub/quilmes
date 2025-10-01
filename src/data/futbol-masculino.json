@@ -1,0 +1,191 @@
+[
+  {
+    "Nombre": "Gonzalo Brites",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2003-06-12",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Matias Suarez",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-15",
+    "fecha_nacimiento": "2010-11-05",
+    "posicion": "Mediocampista"
+  },
+  {
+    "Nombre": "Federico Diaz",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-13",
+    "fecha_nacimiento": "2012-07-28",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Agustin Morales",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Sub-13",
+    "fecha_nacimiento": "2011-10-19",
+    "posicion": "Defensor"
+  },
+  {
+    "Nombre": "Lucas Fernandez",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Reserva",
+    "fecha_nacimiento": "2001-09-02",
+    "posicion": "Arquero"
+  },
+  {
+    "Nombre": "Diego Herrera",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Reserva",
+    "fecha_nacimiento": "2002-04-21",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Matias Alvarez",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2003-08-14",
+    "posicion": "Defensor"
+  },
+  {
+    "Nombre": "Juan Morales",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2002-12-05",
+    "posicion": "Mediocampista"
+  },
+  {
+    "Nombre": "Santiago Diaz",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-15",
+    "fecha_nacimiento": "2010-03-22",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Martin Lopez",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Sub-15",
+    "fecha_nacimiento": "2009-07-11",
+    "posicion": "Defensor"
+  },
+  {
+    "Nombre": "Facundo Ramirez",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2003-02-28",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Bruno Castillo",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-13",
+    "fecha_nacimiento": "2011-05-18",
+    "posicion": "Mediocampista"
+  },
+  {
+    "Nombre": "Nicolas Herrera",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Sub-13",
+    "fecha_nacimiento": "2012-08-12",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Emiliano Torres",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Reserva",
+    "fecha_nacimiento": "2002-11-22",
+    "posicion": "Mediocampista"
+  },
+  {
+    "Nombre": "Leandro Medina",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2003-04-17",
+    "posicion": "Defensor"
+  },
+  {
+    "Nombre": "Diego Alvarez",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2002-06-09",
+    "posicion": "Arquero"
+  },
+  {
+    "Nombre": "Agustin Lopez",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Sub-15",
+    "fecha_nacimiento": "2009-09-25",
+    "posicion": "Mediocampista"
+  },
+  {
+    "Nombre": "Sebastian Diaz",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-15",
+    "fecha_nacimiento": "2010-01-14",
+    "posicion": "Delantero"
+  },
+  {
+    "Nombre": "Tomás Fernandez",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Sub-13",
+    "fecha_nacimiento": "2011-12-02",
+    "posicion": "Defensor"
+  },
+  {
+    "Nombre": "Ezequiel Romero",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "izquierda",
+    "categoria": "Reserva",
+    "fecha_nacimiento": "2001-05-19",
+    "posicion": "Arquero"
+  },
+  {
+    "Nombre": "Facundo Lopez",
+    "deporte": "futbol-masculino",
+    "detalle": "",
+    "pierna_habil": "derecha",
+    "categoria": "Primera",
+    "fecha_nacimiento": "2002-08-30",
+    "posicion": "Mediocampista"
+  }
+]
