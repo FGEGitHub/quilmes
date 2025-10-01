@@ -1,24 +1,24 @@
 [
   {
-    "evento": "Partido Quilmes vs Central",
+    "evento": "Partido San Jorge vs Quilmes",
     "deporte": "futbol-femenino",
     "detalle": "Semifinal torneo regional",
-    "fecha": "01/10/2025",
+    "fecha": "04/10/2025",
     "categoria": "Primera"
   },
   {
-    "evento": "Quilmes vs Club X",
+    "evento": "Libertad vs Quilmes",
     "deporte": "futbol-masculino",
     "detalle": "Liga provincial",
-    "fecha": "02/10/2025",
-    "categoria": "U18"
+    "fecha": "06/10/2025",
+    "categoria": "Reserva"
   },
     {
-    "evento": "Quilmes vs Club X",
+    "evento": "Villa Raquel vs Quilmes",
     "deporte": "hockey-masculino",
     "detalle": "Liga provincial",
-    "fecha": "02/10/2025",
-    "categoria": "C-11"
+    "fecha": "04/10/2025",
+    "categoria": "Primera"
   },
       {
     "evento": "Quilmes vs Club X",
