@@ -1,0 +1,378 @@
+import * as React from 'react';
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import servicioFidei from '../../../services/socios';
+import {
+  Dialog, DialogTitle, DialogContent, DialogActions,
+  Button, TextField
+} from "@mui/material";
+import { alpha } from "@mui/material/styles";
+import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
+import {
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+  Paper, TablePagination, Box, Typography,  Chip
+} from '@mui/material';
+import { useTheme, useMediaQuery } from "@mui/material";
+export default function Ingresos() {
+  const navigate = useNavigate();
+  const theme = useTheme();
+const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [inscrip, setInscrip] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+const [open, setOpen] = useState(false);
+const [nuevoPaciente, setNuevoPaciente] = useState({
+  nombre: "",
+  apellido: "",
+  dni: "",
+  fecha_nacimiento: "",
+  fecha_ingreso: "",
+  telefono: "",
+  direccion: ""
+});
+
+const handleOpen = () => setOpen(true);
+const handleClose = () => setOpen(false);
+
+const handleChangeNuevo = (e) => {
+  setNuevoPaciente({
+    ...nuevoPaciente,
+    [e.target.name]: e.target.value
+  });
+};
+
+const guardarPaciente = async () => {
+  try {
+    const rta = await servicioFidei.agregarPersona(nuevoPaciente);
+    // rta = { ok: true/false, msg: "...", id? }
+
+    if (!rta.ok) {
+      // ❌ DNI existente → NO cerrar modal
+      alert(rta.msg);
+      return;
+    }
+
+    // ✅ Alta correcta
+    alert(rta.msg);
+    traer(); // actualiza tabla
+    handleClose(); // cerrar modal SOLO si ok === true
+
+    // limpia formulario
+    setNuevoPaciente({
+      nombre: "",
+      apellido: "",
+      dni: "",
+      fecha_nacimiento: "",
+      fecha_ingreso: "",
+      telefono: "",
+      direccion: ""
+    });
+
+  } catch (error) {
+    console.error("Error al guardar paciente", error);
+    alert("Error al guardar paciente");
+  }
+};
+  useEffect(() => {
+  
+    traer();
+  }, []);
+
+  const traer = async () => {
+   
+    const ins = await servicioFidei.traersocios();
+    setInscrip(ins);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+    setPage(0);
+  };
+
+  const filteredRows = inscrip.filter((row) =>
+    `${row.nombre} ${row.apellido} ${row.dni}`.toLowerCase().includes(searchTerm)
+  );
+
+  const paginatedRows = filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  return (
+<>
+            <Paper
+        elevation={0}
+        sx={{
+          borderRadius: 3,
+          px: { xs: 2, md: 2.5 },
+          py: { xs: 2, md: 2.25 },
+          background:
+            "linear-gradient(90deg, #0a3b4f 0%, #0b4f6c 55%, #0f7f86 100%)",
+          boxShadow: "0 14px 35px rgba(15,127,134,0.25)",
+          color: "#fff",
+          border: `1px solid ${alpha("#ffffff", 0.12)}`,
+        }}
+      >
+       <Box
+          sx={{
+            display: "flex",
+            alignItems: { xs: "stretch", md: "center" },
+            justifyContent: "space-between",
+            gap: 2,
+            flexDirection: { xs: "column", md: "row" },
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
+            <Box
+              sx={{
+                width: 44,
+                height: 44,
+                borderRadius: 2,
+                background: "rgba(48, 11, 179, 1)",
+                border: "1px solid rgba(255,255,255,0.22)",
+                display: "grid",
+                placeItems: "center",
+              }}
+            >
+              <PeopleRoundedIcon sx={{ color: "#ffffffff" }} />
+            </Box>
+
+            <Box>
+              <Typography sx={{ fontWeight: 900, fontSize: 18, lineHeight: 1.1 }}>
+               Socios
+              </Typography>
+              <Typography sx={{ opacity: 0.9, fontSize: 13 }}>
+                Listado y acceso rápido a detalle / edición
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1.25,
+              alignItems: "center",
+              justifyContent: { xs: "flex-start", md: "flex-end" },
+              flexWrap: "wrap",
+            }}
+          >
+            <Chip
+              label={`Cantidad: ${inscrip.length}`}
+              sx={{
+                color: "#fff",
+                fontWeight: 900,
+                background: "rgba(255,255,255,0.14)",
+                border: "1px solid rgba(255,255,255,0.24)",
+                px: 0.75,
+                borderRadius: 999,
+              }}
+            />
+
+<Button
+  variant="contained"
+  sx={{
+    color: "white",
+    backgroundColor: "hsla(249, 88%, 75%, 1.00)",
+    fontSize: "0.90rem",
+    borderRadius: "999px",   // ⬅️ clave
+    px: 2,                   // padding horizontal
+    py: 0.6,                 // padding vertical
+    textTransform: "none",   // evita MAYÚSCULAS
+  }}
+  onClick={() => navigate("/usuario/nuevosocio")}
+>
+  ➕ Nuevo Socio
+</Button>
+
+          </Box>
+        </Box>
+        </Paper>
+      <Typography variant="h6" gutterBottom>Lista de Socios</Typography>
+
+      <TextField
+        label="Buscar por nombre, apellido o DNI"
+        variant="outlined"
+        fullWidth
+        value={searchTerm}
+        onChange={handleSearch}
+        sx={{ mb: 2 }}
+      />
+{/* <Button                             
+   sx={{ color: "black", borderColor: "black", fontSize: "0.70rem", backgroundColor: "hsla(249, 88%, 75%, 1.00)" }}
+ onClick={handleOpen}>
+  Nuevo Paciente
+</Button> */}
+
+ <Button
+    variant="contained"
+       sx={{ color: "black", borderColor: "black", fontSize: "0.70rem", backgroundColor: "hsla(249, 88%, 75%, 1.00)" }}
+    onClick={() => navigate("/usuario/pacientenuevo")}
+  >
+    ➕ Paciente nuevo
+  </Button>
+<br/>
+{isMobile ? (
+  <Box>
+    {paginatedRows.map((row) => (
+      <Paper key={row.id} sx={{ p: 2, mb: 1 }}>
+        <Typography variant="subtitle2"><b>DNI:</b> {row.dni}</Typography>
+        <Typography variant="subtitle2"><b>Apellido:</b> {row.apellido}</Typography>
+        <Typography variant="subtitle2"><b>Nombre:</b> {row.nombre}</Typography>
+
+        <Button
+          fullWidth
+          sx={{ mt: 1, backgroundColor: "#c5bdbdff", color: "black" }}
+          onClick={() => navigate(`/usuario/paciente/${row.id}`)}
+        >
+          Ver paciente
+        </Button>
+      </Paper>
+    ))}
+  </Box>
+) : (
+ <Paper sx={{ width: '100%', overflowX: 'auto' }}>
+  <TableContainer component={Paper}>
+  <Table sx={{ width: '100%', tableLayout: 'fixed' }}>
+           <TableHead>
+  <TableRow>
+    <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#424242', color: 'white' }}>DNI</TableCell>
+    <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#424242', color: 'white' }}>Apellido</TableCell>
+    <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#424242', color: 'white' }}>Nombre</TableCell>
+    <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#424242', color: 'white' }}>Acciones</TableCell>
+
+  
+  </TableRow>
+</TableHead>
+
+            <TableBody>
+              {paginatedRows.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>{row.dni}</TableCell>
+                  <TableCell>{row.apellido}</TableCell>
+                  <TableCell>{row.nombre}</TableCell>
+                  <TableCell>
+  <Button
+   ariant="outlined"
+                                sx={{ color: "black", borderColor: "black", fontSize: "0.70rem", backgroundColor: "#c5bdbdff" }}
+
+    color="primary"
+    size="small"
+    onClick={() => navigate(`/usuario/paciente/${row.id}`)}
+  >
+    Ver
+  </Button>
+</TableCell>
+               
+                </TableRow>
+              ))}
+              {paginatedRows.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={7} align="center">
+                    No se encontraron resultados.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <TablePagination
+          component="div"
+          count={filteredRows.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 20]}
+        />
+      </Paper>
+)}
+
+    <Dialog open={open} onClose={handleClose} fullWidth>
+  <DialogTitle>Nuevo Paciente</DialogTitle>
+  <DialogContent dividers>
+
+    <TextField
+      margin="dense"
+      label="Nombre"
+      fullWidth
+      name="nombre"
+      value={nuevoPaciente.nombre}
+      onChange={handleChangeNuevo}
+    />
+
+    <TextField
+      margin="dense"
+      label="Apellido"
+      fullWidth
+      name="apellido"
+      value={nuevoPaciente.apellido}
+      onChange={handleChangeNuevo}
+    />
+
+    <TextField
+      margin="dense"
+      label="DNI"
+      fullWidth
+      name="dni"
+      value={nuevoPaciente.dni}
+      onChange={handleChangeNuevo}
+    />
+
+    <TextField
+      margin="dense"
+      type="date"
+      label="Fecha nacimiento"
+      fullWidth
+      name="fecha_nacimiento"
+      InputLabelProps={{ shrink: true }}
+      value={nuevoPaciente.fecha_nacimiento}
+      onChange={handleChangeNuevo}
+    />
+
+    <TextField
+      margin="dense"
+      type="date"
+      label="Fecha ingreso"
+      fullWidth
+      name="fecha_ingreso"
+      InputLabelProps={{ shrink: true }}
+      value={nuevoPaciente.fecha_ingreso}
+      onChange={handleChangeNuevo}
+    />
+
+    <TextField
+      margin="dense"
+      label="Teléfono"
+      fullWidth
+      name="telefono"
+      value={nuevoPaciente.telefono}
+      onChange={handleChangeNuevo}
+    />
+
+    <TextField
+      margin="dense"
+      label="Dirección"
+      fullWidth
+      name="direccion"
+      value={nuevoPaciente.direccion}
+      onChange={handleChangeNuevo}
+    />
+
+  </DialogContent>
+
+  <DialogActions>
+    <Button onClick={handleClose}>Cancelar</Button>
+    <Button variant="contained" onClick={guardarPaciente}>Guardar</Button>
+  </DialogActions>
+</Dialog>
+</>
+  );
+}
