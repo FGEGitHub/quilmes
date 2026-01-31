@@ -10,7 +10,7 @@ import Login from '../pages/login';
 
 const Rutas = [
  
-    { path: '/', element: <Inicio /> },
+    { path: '/', element: <Login /> },
 
 { path: '/inicio', element: <Inicio /> },
 { path: '/principal', element: <Principal /> },
