@@ -217,7 +217,7 @@ const guardarPaciente = async () => {
  <Button
     variant="contained"
        sx={{ color: "black", borderColor: "black", fontSize: "0.70rem", backgroundColor: "hsla(249, 88%, 75%, 1.00)" }}
-    onClick={() => navigate("/usuario/pacientenuevo")}
+    onClick={() => navigate("/usuario/nuevosocio")}
   >
     ➕ Socio Nuevo
   </Button>
