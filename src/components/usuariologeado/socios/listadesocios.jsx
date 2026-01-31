@@ -13,6 +13,8 @@ import {
   Paper, TablePagination, Box, Typography,  Chip
 } from '@mui/material';
 import { useTheme, useMediaQuery } from "@mui/material";
+import jugadoresData from "../../../data/futbol-masculino.json";
+
 export default function Ingresos() {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -79,11 +81,37 @@ const guardarPaciente = async () => {
     traer();
   }, []);
 
-  const traer = async () => {
-   
+ const traer = async () => {
+  try {
+    // 🟢 INTENTO NORMAL: traer desde backend
     const ins = await servicioFidei.traersocios();
     setInscrip(ins);
-  };
+  } catch (error) {
+    console.warn("Backend no disponible, usando datos locales", error);
+
+    // 🟡 FALLBACK: usar JSON local
+    const adaptados = jugadoresData.map((j, index) => {
+      const partes = j.Nombre.split(" ");
+      const apellido = partes.pop();
+      const nombre = partes.join(" ");
+
+      return {
+        id: index + 1,        // id temporal
+        nombre,
+        apellido,
+        dni: "-",             // no existe en el JSON
+        fecha_nacimiento: j.fecha_nacimiento,
+        deporte: j.deporte,
+        categoria: j.categoria,
+        apodo: j.apodo,
+        posicion: j.posicion
+      };
+    });
+
+    setInscrip(adaptados);
+  }
+};
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -215,7 +243,7 @@ const guardarPaciente = async () => {
        sx={{ color: "black", borderColor: "black", fontSize: "0.70rem", backgroundColor: "hsla(249, 88%, 75%, 1.00)" }}
     onClick={() => navigate("/usuario/pacientenuevo")}
   >
-    ➕ Paciente nuevo
+    ➕ Socio Nuevo
   </Button>
 <br/>
 {isMobile ? (
@@ -231,7 +259,7 @@ const guardarPaciente = async () => {
           sx={{ mt: 1, backgroundColor: "#c5bdbdff", color: "black" }}
           onClick={() => navigate(`/usuario/paciente/${row.id}`)}
         >
-          Ver paciente
+          Ver 
         </Button>
       </Paper>
     ))}
@@ -239,7 +267,7 @@ const guardarPaciente = async () => {
 ) : (
  <Paper sx={{ width: '100%', overflowX: 'auto' }}>
   <TableContainer component={Paper}>
-  <Table sx={{ width: '100%', tableLayout: 'fixed' }}>
+  <Table sx={{ width: '100%' }}>
            <TableHead>
   <TableRow>
     <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#424242', color: 'white' }}>DNI</TableCell>

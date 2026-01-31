@@ -36,7 +36,11 @@ const Navbar = () => {
       </div>
 
       <ul className={`nav-links ${isOpen ? "active" : ""}`}>
+                <li><Link to="/login" onClick={() => setIsOpen(false)}>Login</Link></li>
+
         <li><Link to="/" onClick={() => setIsOpen(false)}>Inicio</Link></li>
+                <li><Link to="/usuario/socios" onClick={() => setIsOpen(false)}>Socios</Link></li>
+
         <li><Link to="/calendario" onClick={() => setIsOpen(false)}>Calendario</Link></li>
 
         <li className="dropdown">

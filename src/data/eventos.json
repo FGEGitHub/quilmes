@@ -3,28 +3,35 @@
     "evento": "Partido San Jorge vs Quilmes",
     "deporte": "futbol-femenino",
     "detalle": "Semifinal torneo regional",
-    "fecha": "04/10/2025",
+    "fecha": "04/02/2026",
     "categoria": "Primera"
   },
   {
     "evento": "Libertad vs Quilmes",
     "deporte": "futbol-masculino",
     "detalle": "Liga provincial",
-    "fecha": "06/10/2025",
+    "fecha": "06/01/2026",
     "categoria": "Reserva"
   },
     {
     "evento": "Villa Raquel vs Quilmes",
     "deporte": "futbol-masculino",
     "detalle": "Liga provincial",
-    "fecha": "04/10/2025",
+    "fecha": "04/02/2026",
     "categoria": "Primera"
   },
       {
     "evento": "Quilmes vs Club X",
     "deporte": "cesto",
     "detalle": "Liga provincial",
-    "fecha": "03/10/2025",
+    "fecha": "03/02/2026",
+    "categoria": "C-13"
+  },
+    {
+    "evento": "Quilmes vs Club X",
+    "deporte": "cesto",
+    "detalle": "Liga provincial",
+    "fecha": "03/01/2026",
     "categoria": "C-13"
   }
 ]

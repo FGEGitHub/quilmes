@@ -67,7 +67,7 @@ const camposRequeridos = [
     "direccion",
     "telefono",
     "email",
-    "obra_social",
+
 ];
 const handleGuardar = async () => {
   const esValido = validarCampos();
