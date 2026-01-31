@@ -160,7 +160,7 @@ const guardarPaciente = async () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
             <Box
               sx={{
-                width: 44,
+                width: 40,
                 height: 44,
                 borderRadius: 2,
                 background: "rgba(48, 11, 179, 1)",
