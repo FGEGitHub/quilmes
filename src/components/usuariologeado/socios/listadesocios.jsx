@@ -82,34 +82,10 @@ const guardarPaciente = async () => {
   }, []);
 
  const traer = async () => {
-  try {
-    // 🟢 INTENTO NORMAL: traer desde backend
-    const ins = await servicioFidei.traersocios();
+   const ins = await servicioFidei.traersocios();
     setInscrip(ins);
-  } catch (error) {
-    console.warn("Backend no disponible, usando datos locales", error);
 
-    // 🟡 FALLBACK: usar JSON local
-    const adaptados = jugadoresData.map((j, index) => {
-      const partes = j.Nombre.split(" ");
-      const apellido = partes.pop();
-      const nombre = partes.join(" ");
 
-      return {
-        id: index + 1,        // id temporal
-        nombre,
-        apellido,
-        dni: "-",             // no existe en el JSON
-        fecha_nacimiento: j.fecha_nacimiento,
-        deporte: j.deporte,
-        categoria: j.categoria,
-        apodo: j.apodo,
-        posicion: j.posicion
-      };
-    });
-
-    setInscrip(adaptados);
-  }
 };
 
 

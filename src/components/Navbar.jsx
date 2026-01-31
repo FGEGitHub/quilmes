@@ -41,7 +41,7 @@ const Navbar = () => {
         <li><Link to="/" onClick={() => setIsOpen(false)}>Inicio</Link></li>
                 <li><Link to="/usuario/socios" onClick={() => setIsOpen(false)}>Socios</Link></li>
 
-        <li><Link to="/calendario" onClick={() => setIsOpen(false)}>Calendario</Link></li>
+      {/*   <li><Link to="/calendario" onClick={() => setIsOpen(false)}>Calendario</Link></li>
 
         <li className="dropdown">
           <span>Deportes ▾</span>
@@ -55,7 +55,7 @@ const Navbar = () => {
 
         <li><Link to="/quienes-somos" onClick={() => setIsOpen(false)}>Quiénes Somos</Link></li>
         <li><Link to="/contacto" onClick={() => setIsOpen(false)}>Contacto</Link></li>
-
+ */}
         {/* 🔐 SOLO si está logueado y nivel 1 */}
         {isLogueado && isNivel1 && (
           <>
