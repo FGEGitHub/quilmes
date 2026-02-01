@@ -96,10 +96,11 @@ const CuotasSocio = () => {
   ========================= */
   const pagarCuota = async () => {
     try {
-      if (!formPago.mes || !formPago.anio || !formPago.fecha_pago || !formPago.medio) {
-        alert("Complete todos los campos");
-        return;
-      }
+ if (!formPago.mes || !formPago.anio) {
+  alert("Debe seleccionar mes y año");
+  return;
+}
+
 
       await servicioSocios.pagarcuota({
         socio_id: id,

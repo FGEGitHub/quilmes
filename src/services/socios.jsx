@@ -148,11 +148,11 @@ const agendarapaciente = async (datos) => {
 
 
 
-const solicitarturno = async (datos) => {
+const pagarcuota = async (datos) => {
 
   // const data = await axios.post('http://localhost:4000/signupp', datos)
-  const { data } = await axios.post(baseUrl + 'solicitarturno', datos)
+  const { data } = await axios.post(baseUrl + 'pagarcuota', datos)
   return data
 
 }
-export default {traercuotas, solicitarturno, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}
+export default {traercuotas, pagarcuota, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}

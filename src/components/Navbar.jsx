@@ -58,8 +58,6 @@ const Navbar = () => {
         <li><Link to="/contacto" onClick={() => setIsOpen(false)}>Contacto</Link></li>
  */}
         {/* 🔐 SOLO si está logueado y nivel 1 */}
-        {isLogueado && isNivel1 && (
-          <>
           {isLogueado && isNivel2 && (
           <>
             <li>
@@ -67,9 +65,21 @@ const Navbar = () => {
                 Cuotas
               </Link>
             </li>
-         
+               <li>
+              <Link to="/usuario/socios" onClick={() => setIsOpen(false)}>
+                Socios
+              </Link>
+            </li>
+              <li>
+              <button className="logout-btn" onClick={handleLogout}>
+                Cerrar sesión
+              </button>
+            </li>
           </>
         )}
+        {isLogueado && isNivel1 && (
+          <>
+        
             <li>
               <Link to="/usuario/socios" onClick={() => setIsOpen(false)}>
                 Socios

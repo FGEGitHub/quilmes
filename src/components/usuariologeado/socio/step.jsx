@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import {
   Box,
   Typography,
-  Paper
+  Paper,
+  Tooltip,
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
@@ -10,6 +11,8 @@ import PaymentIcon from "@mui/icons-material/Payment";
 
 import SocioEditar from "./componenteficha";
 import SocioResumen from "./cuotas";
+
+/* ---------------- SECCIONES ---------------- */
 
 const sections = [
   {
@@ -24,19 +27,43 @@ const sections = [
   },
 ];
 
+/* ---------------- COMPONENTE ---------------- */
+
 const SocioMenu = () => {
   const [activeSection, setActiveSection] = useState(0);
+
+  /* ---------- USER CONTEXT ---------- */
+
+  const loggedUserJSON = window.localStorage.getItem("loggedNoteAppUser");
+
+  let userContext = null;
+
+  if (loggedUserJSON) {
+    try {
+      userContext = JSON.parse(loggedUserJSON);
+    } catch {
+      window.localStorage.removeItem("loggedNoteAppUser");
+    }
+  }
+
+  const isNivel2 = userContext?.nivel === "2";
+
+  /* ---------- CONTENIDO ---------- */
 
   const renderContent = () => {
     switch (activeSection) {
       case 0:
         return <SocioEditar />;
+
       case 1:
         return <SocioResumen />;
+
       default:
         return null;
     }
   };
+
+  /* ---------------- UI ---------------- */
 
   return (
     <Box
@@ -51,7 +78,7 @@ const SocioMenu = () => {
         elevation={4}
         sx={{
           width: "100%",
-          maxWidth: 1100,
+          maxWidth: 1300,
           p: 4,
           borderRadius: 3,
         }}
@@ -79,49 +106,79 @@ const SocioMenu = () => {
           {sections.map((sec) => {
             const active = activeSection === sec.id;
 
+            // 🔒 Bloquear Cuotas si no es nivel 2
+            const disabled = sec.id === 1 && !isNivel2;
+
             return (
-              <Box
+              <Tooltip
                 key={sec.id}
-                onClick={() => setActiveSection(sec.id)}
-                sx={{
-                  cursor: "pointer",
-                  px: 4,
-                  py: 2,
-                  mx: 1,
-                  textAlign: "center",
-                  borderBottom: active
-                    ? "3px solid #1976d2"
-                    : "3px solid transparent",
-                  transition: "all 0.2s",
-                  "&:hover": {
-                    backgroundColor: "#f5f5f5",
-                  },
-                }}
+                title={
+                  disabled
+                    ? "Solo usuarios nivel 2 pueden acceder a Cuotas"
+                    : ""
+                }
               >
                 <Box
+                  onClick={() => {
+                    if (!disabled) {
+                      setActiveSection(sec.id);
+                    }
+                  }}
                   sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    mb: 0.5,
-                    color: active ? "primary.main" : "text.secondary",
+                    cursor: disabled ? "not-allowed" : "pointer",
+                    px: 4,
+                    py: 2,
+                    mx: 1,
+                    textAlign: "center",
+
+                    borderBottom: active
+                      ? "3px solid #1976d2"
+                      : "3px solid transparent",
+
+                    transition: "all 0.2s",
+
+                    opacity: disabled ? 0.4 : 1,
+
+                    "&:hover": disabled
+                      ? {}
+                      : {
+                          backgroundColor: "#f5f5f5",
+                        },
                   }}
                 >
-                  {sec.icon}
-                </Box>
+                  {/* ICONO */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      mb: 0.5,
+                      color: active
+                        ? "primary.main"
+                        : "text.secondary",
+                    }}
+                  >
+                    {sec.icon}
+                  </Box>
 
-                <Typography
-                  fontWeight={active ? "bold" : "normal"}
-                  color={active ? "primary" : "text.secondary"}
-                >
-                  {sec.label}
-                </Typography>
-              </Box>
+                  {/* TEXTO */}
+                  <Typography
+                    fontWeight={active ? "bold" : "normal"}
+                    color={
+                      active
+                        ? "primary"
+                        : "text.secondary"
+                    }
+                  >
+                    {sec.label}
+                  </Typography>
+                </Box>
+              </Tooltip>
             );
           })}
         </Box>
 
         {/* CONTENIDO */}
-        <Box minHeight="400px">
+        <Box minHeight="500px">
           {renderContent()}
         </Box>
       </Paper>
