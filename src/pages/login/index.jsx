@@ -20,7 +20,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import 'antd/dist/antd.css'
 import servicioUsuario from '../../services/usuarios'
 import Checkbox from '@mui/material/Checkbox';
-
+import Nav from '../../components/Navbar.jsx'
 import marcas from '../../assets/quilmes.jpeg'
 
 
@@ -88,6 +88,9 @@ const Login = () => {
         case '1': navigate('/usuario/socios')
         window.location.reload(true);
           break;
+        case '2': navigate('/usuario/socios')
+        window.location.reload(true);
+          break;
         
 
       }
@@ -113,7 +116,7 @@ const Login = () => {
 
 const LoginReturn = () => (
   <Grid container component="main" sx={{ height: '100vh', width: '100vw', background: '#002D57', justifyContent: 'center' }}>
-    
+    <Nav/>
     {/* Columna izquierda con fondo y logo 
     'linear-gradient(to bottom right,hsl(209, 100%, 9%),rgb(0, 34, 66))'*/}
     <Grid

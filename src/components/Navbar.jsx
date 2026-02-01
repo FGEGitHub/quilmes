@@ -11,6 +11,7 @@ const Navbar = () => {
   const loggedUserJSON = window.localStorage.getItem("loggedNoteAppUser");
 
   if (loggedUserJSON) {
+   
     try {
       userContext = JSON.parse(loggedUserJSON);
     } catch (error) {
@@ -19,7 +20,8 @@ const Navbar = () => {
   }
 
   const isLogueado = !!userContext?.token;
-  const isNivel1 = userContext?.nivel === 1;
+  const isNivel1 = userContext?.nivel == "1";
+  const isNivel2 = userContext?.nivel == "2";
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedNoteAppUser");
@@ -38,8 +40,7 @@ const Navbar = () => {
       <ul className={`nav-links ${isOpen ? "active" : ""}`}>
                 <li><Link to="/login" onClick={() => setIsOpen(false)}>Login</Link></li>
 
-        <li><Link to="/" onClick={() => setIsOpen(false)}>Inicio</Link></li>
-                <li><Link to="/usuario/socios" onClick={() => setIsOpen(false)}>Socios</Link></li>
+      
 
       {/*   <li><Link to="/calendario" onClick={() => setIsOpen(false)}>Calendario</Link></li>
 
@@ -59,8 +60,18 @@ const Navbar = () => {
         {/* 🔐 SOLO si está logueado y nivel 1 */}
         {isLogueado && isNivel1 && (
           <>
+          {isLogueado && isNivel2 && (
+          <>
             <li>
-              <Link to="/socios" onClick={() => setIsOpen(false)}>
+              <Link to="/usuario/cuotas" onClick={() => setIsOpen(false)}>
+                Cuotas
+              </Link>
+            </li>
+         
+          </>
+        )}
+            <li>
+              <Link to="/usuario/socios" onClick={() => setIsOpen(false)}>
                 Socios
               </Link>
             </li>

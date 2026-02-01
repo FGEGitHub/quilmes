@@ -1,5 +1,5 @@
 import React from "react";
-import Componente from "../../../components/usuariologeado/socio/componenteficha";
+import Componente from "../../../components/usuariologeado/socio/step";
 import Nav from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import { Box, useMediaQuery } from "@mui/material";
