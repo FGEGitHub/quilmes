@@ -93,10 +93,14 @@ const modificarusuario = async (datos)=> {
     const {data } = await axios.post(baseUrl + 'modificarusuario' ,datos,config)
     return data 
 } 
-const borrarturno = async (datos)=> {
-    const {data } = await axios.post(baseUrl + 'borrarturno' ,datos,config)
-    return data 
-} 
+const actualizarsocio = async (datos) => {
+  const { data } = await axios.post(
+    baseUrl + "actualizarsocio",
+    datos
+  );
+  return data;
+};
+
 
 
 const guardarConsulta = async (datos)=> {
@@ -141,4 +145,4 @@ const solicitarturno = async (datos) => {
   return data
 
 }
-export default {solicitarturno, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, borrarturno, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}
+export default {solicitarturno, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}

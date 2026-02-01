@@ -90,7 +90,7 @@ const SocioEditar = () => {
     const cargarSocio = async () => {
       try {
         const res = await servicioSocios.traersocio(id);
-        setSocio(res)
+        setSocio(res[0])
       } catch (error) {
         console.error(error);
         alert("Error al cargar socio");
@@ -128,14 +128,17 @@ const SocioEditar = () => {
 
   /* 🔹 GUARDAR */
   const handleGuardar = async () => {
-    try {
-      await servicioSocios.actualizarsocio(id, socio);
-      navigate(-1);
-    } catch (error) {
-      console.error(error);
-      alert("Error al actualizar socio");
-    }
-  };
+  try {
+    const rta = await servicioSocios.actualizarsocio({
+      id,
+      ...socio
+    });
+    alert(rta);
+  } catch (error) {
+    console.error(error);
+    alert("Error al actualizar socio");
+  }
+};
 
   return (
   <Card sx={{ maxWidth: 1100, margin: "auto", mt: 4 }}>
