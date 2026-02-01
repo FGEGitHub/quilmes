@@ -226,7 +226,7 @@ const CuotasSocio = () => {
                 label="Mes"
                 name="mes"
                 value={formPago.mes}
-                onChange={handleChange}
+                onChange={handleChange}sx = {{ width: '200px' }}
               >
                 {meses.map((mes, index) => (
                   <MenuItem key={index} value={index + 1}>
@@ -255,7 +255,7 @@ const CuotasSocio = () => {
                 name="fecha_pago"
                 InputLabelProps={{ shrink: true }}
                 value={formPago.fecha_pago}
-                onChange={handleChange}
+                onChange={handleChange}sx = {{ width: '200px' }}
               />
             </Grid>
 
@@ -266,7 +266,7 @@ const CuotasSocio = () => {
                 label="Medio de Pago"
                 name="medio"
                 value={formPago.medio}
-                onChange={handleChange}
+                onChange={handleChange}sx = {{ width: '200px' }}
               >
                 <MenuItem value="efectivo">Efectivo</MenuItem>
                 <MenuItem value="transferencia">Transferencia</MenuItem>

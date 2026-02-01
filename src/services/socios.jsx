@@ -88,10 +88,29 @@ const borrarpaciente = async (datos)=> {
 
 
 
-const agregarsocio = async (datos)=> {
-    const {data } = await axios.post(baseUrl + 'agregarsocio' ,datos,config)
-    return data 
-} 
+const agregarsocio = async (datos) => {
+  try {
+    const { data } = await axios.post(
+      baseUrl + "agregarsocio",
+      datos,
+      config
+    );
+
+    return data;
+
+  } catch (error) {
+
+    // 👇 Acá viene el mensaje del backend
+    if (error.response) {
+      console.log(error.response.data);
+      alert(error.response.data);
+      throw error.response.data; // reenviamos el mensaje
+    }
+
+    throw "Error al conectar con el servidor";
+  }
+};
+
 
 const crearturno = async (datos)=> {
     const {data } = await axios.post(baseUrl + 'crearturno' ,datos,config)

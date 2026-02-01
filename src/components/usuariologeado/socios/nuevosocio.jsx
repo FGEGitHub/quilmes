@@ -124,11 +124,13 @@ const handleCategoriaChange = (e) => {
 
   const handleGuardar = async () => {
     try {
-      await servicioSocios.agregarsocio(socio);
+     const rta = await servicioSocios.agregarsocio(socio);
+     console.log(rta);
+      alert(rta || "Socio guardado con éxito");
       navigate(-1);
     } catch (error) {
       console.error(error);
-      alert("Error al guardar socio");
+     // alert("Error al guardar socio");
     }
   };
 
@@ -287,6 +289,10 @@ const handleCategoriaChange = (e) => {
                 <Grid item xs={12} sm={3}>
                   <TextField label="Vínculo" name="vinculo" fullWidth size="small"
                     value={socio.vinculo} onChange={handleChange} />
+                </Grid>
+                 <Grid item xs={12} sm={3}>
+                  <TextField label="Telefono del tutor" name="tutor_tel" fullWidth size="small"
+                    value={socio.tutor_tel} onChange={handleChange} />
                 </Grid>
               </Grid>
             )}

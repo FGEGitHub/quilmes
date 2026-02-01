@@ -70,7 +70,7 @@ const SocioEditar = () => {
     tiene_tutor: false,
     tutor_nombre: "",
     tutor_dni: "",
-    tutor_telefono: "",
+    tutor_tel: "",
     tutor_email: "",
     vinculo: "",
     apto_medico: "",
@@ -257,6 +257,14 @@ const SocioEditar = () => {
               <Grid item xs={12} sm={3}>
                 <TextField label="Vínculo" name="vinculo" fullWidth size="small"
                   value={socio.vinculo} onChange={handleChange} />
+              </Grid>
+                <Grid item xs={12} sm={3}>
+                <TextField label="Email tutor" name="tutor_email" fullWidth size="small"
+                  value={socio.tutor_email} onChange={handleChange} />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField label="Telefono del tutor" name="tutor_tel" fullWidth size="small"
+                  value={socio.tutor_tel} onChange={handleChange} />
               </Grid>
             </Grid>
           )}

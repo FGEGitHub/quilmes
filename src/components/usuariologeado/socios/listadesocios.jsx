@@ -1,100 +1,94 @@
 import * as React from 'react';
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import servicioFidei from '../../../services/socios';
+import SearchIcon from "@mui/icons-material/Search";
+import InputAdornment from "@mui/material/InputAdornment";
+
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   Button, TextField
 } from "@mui/material";
+
 import { alpha } from "@mui/material/styles";
+
 import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
+
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  Paper, TablePagination, Box, Typography,  Chip
+  Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, TablePagination,
+  Box, Typography, Chip
 } from '@mui/material';
+
 import { useTheme, useMediaQuery } from "@mui/material";
-import jugadoresData from "../../../data/futbol-masculino.json";
 
 export default function Ingresos() {
+
   const navigate = useNavigate();
   const theme = useTheme();
-const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  /* ---------- USER CONTEXT ---------- */
+
+  const loggedUserJSON = window.localStorage.getItem("loggedNoteAppUser");
+
+  let userContext = null;
+
+  if (loggedUserJSON) {
+    try {
+      userContext = JSON.parse(loggedUserJSON);
+    } catch {
+      window.localStorage.removeItem("loggedNoteAppUser");
+    }
+  }
+
+  const isNivel2 = userContext?.nivel === "2";
+
+  /* ---------- STATES ---------- */
+
   const [inscrip, setInscrip] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filtroCuota, setFiltroCuota] = useState("todos");
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-const [open, setOpen] = useState(false);
-const [nuevoPaciente, setNuevoPaciente] = useState({
-  nombre: "",
-  apellido: "",
-  dni: "",
-  fecha_nacimiento: "",
-  fecha_ingreso: "",
-  telefono: "",
-  direccion: ""
-});
 
-const handleOpen = () => setOpen(true);
-const handleClose = () => setOpen(false);
 
-const handleChangeNuevo = (e) => {
-  setNuevoPaciente({
-    ...nuevoPaciente,
-    [e.target.name]: e.target.value
-  });
-};
+  /* ---------- DATA ---------- */
 
-const guardarPaciente = async () => {
-  try {
-    const rta = await servicioFidei.agregarPersona(nuevoPaciente);
-    // rta = { ok: true/false, msg: "...", id? }
-
-    if (!rta.ok) {
-      // ❌ DNI existente → NO cerrar modal
-      alert(rta.msg);
-      return;
-    }
-
-    // ✅ Alta correcta
-    alert(rta.msg);
-    traer(); // actualiza tabla
-    handleClose(); // cerrar modal SOLO si ok === true
-
-    // limpia formulario
-    setNuevoPaciente({
-      nombre: "",
-      apellido: "",
-      dni: "",
-      fecha_nacimiento: "",
-      fecha_ingreso: "",
-      telefono: "",
-      direccion: ""
-    });
-
-  } catch (error) {
-    console.error("Error al guardar paciente", error);
-    alert("Error al guardar paciente");
-  }
-};
   useEffect(() => {
-  
     traer();
   }, []);
 
- const traer = async () => {
-   const ins = await servicioFidei.traersocios();
+  const traer = async () => {
+    const ins = await servicioFidei.traersocios();
     setInscrip(ins);
+  };
 
 
-};
+  /* ---------- HELPERS ---------- */
+
+  const estaAlDia = (mes, anio) => {
+
+    if (!mes || !anio) return false;
+
+    const hoy = new Date();
+
+    return (
+      mes === hoy.getMonth() + 1 &&
+      anio === hoy.getFullYear()
+    );
+  };
 
 
-  const handleChangePage = (event, newPage) => {
+  /* ---------- EVENTS ---------- */
+
+  const handleChangePage = (e, newPage) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+  const handleChangeRowsPerPage = (e) => {
+    setRowsPerPage(parseInt(e.target.value, 10));
     setPage(0);
   };
 
@@ -103,20 +97,56 @@ const guardarPaciente = async () => {
     setPage(0);
   };
 
-  const filteredRows = inscrip.filter((row) =>
-    `${row.nombre} ${row.apellido} ${row.dni}`.toLowerCase().includes(searchTerm)
+
+  /* ---------- FILTER ---------- */
+
+  const filteredRows = inscrip.filter((row) => {
+
+    const coincide =
+      `${row.nombre} ${row.apellido} ${row.dni}`
+        .toLowerCase()
+        .includes(searchTerm);
+
+    if (!coincide) return false;
+
+    if (filtroCuota === "todos") return true;
+
+    if (filtroCuota === "sinpago") {
+      return !row.ultimaCuotaMes;
+    }
+
+    if (filtroCuota === "aldia") {
+      return estaAlDia(row.ultimaCuotaMes, row.ultimaCuotaAnio);
+    }
+
+    if (filtroCuota === "atrasado") {
+      return row.ultimaCuotaMes &&
+        !estaAlDia(row.ultimaCuotaMes, row.ultimaCuotaAnio);
+    }
+
+    return true;
+  });
+
+
+  const paginatedRows = filteredRows.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
   );
 
-  const paginatedRows = filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  /* ---------- RENDER ---------- */
 
   return (
-<>
-            <Paper
+    <>
+
+      {/* HEADER */}
+
+      <Paper
         elevation={0}
         sx={{
           borderRadius: 3,
-          px: { xs: 2, md: 2.5 },
-          py: { xs: 2, md: 2.25 },
+          px: 2.5,
+          py: 2.25,
           background:
             "linear-gradient(90deg, #0a3b4f 0%, #0b4f6c 55%, #0f7f86 100%)",
           boxShadow: "0 14px 35px rgba(15,127,134,0.25)",
@@ -124,62 +154,86 @@ const guardarPaciente = async () => {
           border: `1px solid ${alpha("#ffffff", 0.12)}`,
         }}
       >
-       <Box
+
+        <Box
           sx={{
             display: "flex",
-            alignItems: { xs: "stretch", md: "center" },
             justifyContent: "space-between",
-            gap: 2,
-            flexDirection: { xs: "column", md: "row" },
+            flexWrap: "wrap",
+            gap: 2
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
+
+          <Box sx={{ display: "flex", gap: 1.2 }}>
+
             <Box
               sx={{
                 width: 40,
                 height: 44,
                 borderRadius: 2,
                 background: "rgba(48, 11, 179, 1)",
-                border: "1px solid rgba(255,255,255,0.22)",
                 display: "grid",
                 placeItems: "center",
               }}
             >
-              <PeopleRoundedIcon sx={{ color: "#ffffffff" }} />
+              <PeopleRoundedIcon sx={{ color: "#fff" }} />
             </Box>
 
             <Box>
-              <Typography sx={{ fontWeight: 900, fontSize: 18, lineHeight: 1.1 }}>
-               Socios
-              </Typography>
-              <Typography sx={{ opacity: 0.9, fontSize: 13 }}>
-                Listado y acceso rápido a detalle / edición
+              <Typography fontWeight={900}>Socios</Typography>
+              <Typography fontSize={13}>
+                Listado general
               </Typography>
             </Box>
+
           </Box>
 
-          <Box
-            sx={{
-              display: "flex",
-              gap: 1.25,
-              alignItems: "center",
-              justifyContent: { xs: "flex-start", md: "flex-end" },
-              flexWrap: "wrap",
-            }}
-          >
-            <Chip
-              label={`Cantidad: ${inscrip.length}`}
-              sx={{
-                color: "#fff",
-                fontWeight: 900,
-                background: "rgba(255,255,255,0.14)",
-                border: "1px solid rgba(255,255,255,0.24)",
-                px: 0.75,
-                borderRadius: 999,
-              }}
-            />
 
-<Button
+          <Chip
+            label={`Cantidad: ${inscrip.length}`}
+            sx={{
+              color: "#fff",
+              fontWeight: 900,
+              background: "rgba(255,255,255,0.14)",
+            }}
+          />
+
+        </Box>
+
+      </Paper>
+
+
+      {/* FILTROS */}
+
+      <Box sx={{ display: "flex", gap: 2, my: 2, flexWrap: "wrap" }}>
+
+<TextField
+  label="Buscar"
+  placeholder="Ej: 30123456 o Pérez"
+  helperText="Podés buscar por DNI, nombre o apellido"
+  value={searchTerm}
+  onChange={handleSearch}
+/>
+
+        {isNivel2 && (
+
+          <TextField
+            select
+            label="Filtrar cuota"
+            value={filtroCuota}
+            onChange={(e) => setFiltroCuota(e.target.value)}
+            SelectProps={{ native: true }}
+            sx={{ width: 200 }}
+          >
+            <option value="todos">Todos</option>
+            <option value="aldia">Al día</option>
+            <option value="atrasado">Atrasados</option>
+            <option value="sinpago">Sin pagos</option>
+          </TextField>
+
+        )}
+
+       <Button
   variant="contained"
   sx={{
     color: "white",
@@ -195,188 +249,269 @@ const guardarPaciente = async () => {
   ➕ Nuevo Socio
 </Button>
 
-          </Box>
-        </Box>
-        </Paper>
-      <Typography variant="h6" gutterBottom>Lista de Socios</Typography>
+      </Box>
 
-      <TextField
-        label="Buscar por nombre, apellido o DNI"
-        variant="outlined"
-        fullWidth
-        value={searchTerm}
-        onChange={handleSearch}
-        sx={{ mb: 2 }}
-      />
-{/* <Button                             
-   sx={{ color: "black", borderColor: "black", fontSize: "0.70rem", backgroundColor: "hsla(249, 88%, 75%, 1.00)" }}
- onClick={handleOpen}>
-  Nuevo Paciente
-</Button> */}
 
- <Button
-    variant="contained"
-       sx={{ color: "black", borderColor: "black", fontSize: "0.70rem", backgroundColor: "hsla(249, 88%, 75%, 1.00)" }}
-    onClick={() => navigate("/usuario/nuevosocio")}
-  >
-    ➕ Socio Nuevo
-  </Button>
-<br/>
-{isMobile ? (
-  <Box>
+      {/* TABLA */}
+
+     {isMobile ? (
+
+  /* ========== VISTA TARJETAS (MOBILE) ========== */
+
+  <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+
     {paginatedRows.map((row) => (
-      <Paper key={row.id} sx={{ p: 2, mb: 1 }}>
-        <Typography variant="subtitle2"><b>DNI:</b> {row.dni}</Typography>
-        <Typography variant="subtitle2"><b>Apellido:</b> {row.apellido}</Typography>
-        <Typography variant="subtitle2"><b>Nombre:</b> {row.nombre}</Typography>
+
+      <Paper
+        key={row.id}
+        elevation={3}
+        sx={{
+          p: 2,
+          borderRadius: 3,
+          display: "flex",
+          flexDirection: "column",
+          gap: 1.2,
+          backgroundColor: "#949299"
+        }}
+      >
+
+        {/* Header card */}
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}
+        >
+
+          <Typography fontWeight={700}>
+          Nro: {row.id} - {row.apellido} {row.nombre}
+          </Typography>
+
+          <Chip
+            label={`DNI: ${row.dni}`}
+            size="small"
+            variant="outlined"
+          />
+
+        </Box>
+
+
+        {/* Datos */}
+
+        <Typography fontSize={14}>
+          <b>Nombre:</b> {row.nombre}
+        </Typography>
+
+        <Typography fontSize={14}>
+          <b>Apellido:</b> {row.apellido}
+        </Typography>
+    <Typography fontSize={14}>
+          <b>Disciplina:</b> {row.disciplina} {row.categoria ? `- ${row.categoria}` : '' }
+        </Typography>
+
+        {/* Cuota */}
+
+        {isNivel2 && (
+
+          <Box>
+
+            <Typography fontSize={13} fontWeight={600}>
+              Última cuota
+            </Typography>
+
+            {row.ultimaCuotaMes ? (
+
+              <Chip
+                size="small"
+                label={`${row.ultimaCuotaMes}/${row.ultimaCuotaAnio}`}
+                color={
+                  estaAlDia(
+                    row.ultimaCuotaMes,
+                    row.ultimaCuotaAnio
+                  )
+                    ? "success"
+                    : "warning"
+                }
+              />
+
+            ) : (
+
+              <Chip
+                size="small"
+                label="Sin pagos"
+                color="error"
+              />
+
+            )}
+
+          </Box>
+
+        )}
+
+
+        {/* Botón */}
 
         <Button
+          variant="contained"
           fullWidth
-          sx={{ mt: 1, backgroundColor: "#c5bdbdff", color: "black" }}
+          size="small"
+          sx={{ mt: 1 }}
           onClick={() => navigate(`/usuario/socio/${row.id}`)}
         >
-          Ver 
+          Ver Detalle
         </Button>
+
       </Paper>
+
     ))}
+
+
+    {paginatedRows.length === 0 && (
+
+      <Typography align="center" sx={{ mt: 2 }}>
+
+        Sin resultados
+
+      </Typography>
+
+    )}
+
   </Box>
+
 ) : (
- <Paper sx={{ width: '100%', overflowX: 'auto' }}>
-  <TableContainer component={Paper}>
-  <Table sx={{ width: '100%' }}>
-           <TableHead>
-  <TableRow>
-    <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#424242', color: 'white' }}>DNI</TableCell>
-    <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#424242', color: 'white' }}>Apellido</TableCell>
-    <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#424242', color: 'white' }}>Nombre</TableCell>
-    <TableCell sx={{ fontWeight: 'bold', backgroundColor: '#424242', color: 'white' }}>Acciones</TableCell>
 
-  
-  </TableRow>
-</TableHead>
+  /* ========== VISTA TABLA (DESKTOP) ========== */
 
-            <TableBody>
-              {paginatedRows.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{row.dni}</TableCell>
-                  <TableCell>{row.apellido}</TableCell>
+  <Paper>
+
+    <TableContainer>
+
+      <Table>
+
+        <TableHead>
+
+          <TableRow>
+
+            <TableCell><b>ID</b></TableCell>
+            <TableCell><b>DNI</b></TableCell>
+            <TableCell><b>Apellido</b></TableCell>
+            <TableCell><b>Nombre</b></TableCell>    
+            <TableCell><b>Disciplina</b></TableCell>
+
+
+            {isNivel2 && (
+              <TableCell><b>Última Cuota</b></TableCell>
+            )}
+
+            <TableCell><b>Acciones</b></TableCell>
+
+          </TableRow>
+
+        </TableHead>
+
+
+        <TableBody>
+
+          {paginatedRows.map((row) => (
+
+            <TableRow key={row.id}>
+
+              <TableCell>{row.id}</TableCell>
+              <TableCell>{row.dni}</TableCell>
+              <TableCell>{row.apellido}</TableCell>
                   <TableCell>{row.nombre}</TableCell>
-                  <TableCell>
-  <Button
-   ariant="outlined"
-                                sx={{ color: "black", borderColor: "black", fontSize: "0.70rem", backgroundColor: "#c5bdbdff" }}
+                  <TableCell>{row.disciplina} {row.categoria ? `- ${row.categoria}` : ''}</TableCell>
 
-    color="primary"
-    size="small"
-    onClick={() => navigate(`/usuario/socio/${row.id}`)}
-  >
-    Ver
-  </Button>
-</TableCell>
-               
-                </TableRow>
-              ))}
-              {paginatedRows.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={7} align="center">
-                    No se encontraron resultados.
-                  </TableCell>
-                </TableRow>
+            
+              {isNivel2 && (
+
+                <TableCell>
+
+                  {row.ultimaCuotaMes ? (
+
+                    <Chip
+                      size="small"
+                      label={`${row.ultimaCuotaMes}/${row.ultimaCuotaAnio}`}
+                      color={
+                        estaAlDia(
+                          row.ultimaCuotaMes,
+                          row.ultimaCuotaAnio
+                        )
+                          ? "success"
+                          : "warning"
+                      }
+                    />
+
+                  ) : (
+
+                    <Chip
+                      size="small"
+                      label="Sin pagos"
+                      color="error"
+                    />
+
+                  )}
+
+                </TableCell>
+
               )}
-            </TableBody>
-          </Table>
-        </TableContainer>
 
-        <TablePagination
-          component="div"
-          count={filteredRows.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[5, 10, 20]}
-        />
-      </Paper>
+
+              <TableCell>
+
+                <Button
+                  size="small"
+                  onClick={() =>
+                    navigate(`/usuario/socio/${row.id}`)
+                  }
+                >
+                  Ver
+                </Button>
+
+              </TableCell>
+
+            </TableRow>
+
+          ))}
+
+
+          {paginatedRows.length === 0 && (
+
+            <TableRow>
+
+              <TableCell colSpan={10} align="center">
+
+                Sin resultados
+
+              </TableCell>
+
+            </TableRow>
+
+          )}
+
+        </TableBody>
+
+      </Table>
+
+    </TableContainer>
+
+
+    <TablePagination
+      component="div"
+      count={filteredRows.length}
+      page={page}
+      onPageChange={handleChangePage}
+      rowsPerPage={rowsPerPage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
+      rowsPerPageOptions={[10, 50, 100]}
+    />
+
+  </Paper>
+
 )}
 
-    <Dialog open={open} onClose={handleClose} fullWidth>
-  <DialogTitle>Nuevo Paciente</DialogTitle>
-  <DialogContent dividers>
-
-    <TextField
-      margin="dense"
-      label="Nombre"
-      fullWidth
-      name="nombre"
-      value={nuevoPaciente.nombre}
-      onChange={handleChangeNuevo}
-    />
-
-    <TextField
-      margin="dense"
-      label="Apellido"
-      fullWidth
-      name="apellido"
-      value={nuevoPaciente.apellido}
-      onChange={handleChangeNuevo}
-    />
-
-    <TextField
-      margin="dense"
-      label="DNI"
-      fullWidth
-      name="dni"
-      value={nuevoPaciente.dni}
-      onChange={handleChangeNuevo}
-    />
-
-    <TextField
-      margin="dense"
-      type="date"
-      label="Fecha nacimiento"
-      fullWidth
-      name="fecha_nacimiento"
-      InputLabelProps={{ shrink: true }}
-      value={nuevoPaciente.fecha_nacimiento}
-      onChange={handleChangeNuevo}
-    />
-
-    <TextField
-      margin="dense"
-      type="date"
-      label="Fecha ingreso"
-      fullWidth
-      name="fecha_ingreso"
-      InputLabelProps={{ shrink: true }}
-      value={nuevoPaciente.fecha_ingreso}
-      onChange={handleChangeNuevo}
-    />
-
-    <TextField
-      margin="dense"
-      label="Teléfono"
-      fullWidth
-      name="telefono"
-      value={nuevoPaciente.telefono}
-      onChange={handleChangeNuevo}
-    />
-
-    <TextField
-      margin="dense"
-      label="Dirección"
-      fullWidth
-      name="direccion"
-      value={nuevoPaciente.direccion}
-      onChange={handleChangeNuevo}
-    />
-
-  </DialogContent>
-
-  <DialogActions>
-    <Button onClick={handleClose}>Cancelar</Button>
-    <Button variant="contained" onClick={guardarPaciente}>Guardar</Button>
-  </DialogActions>
-</Dialog>
-</>
+    </>
   );
 }
