@@ -161,8 +161,9 @@ const handleCategoriaChange = (e) => {
                   value={socio.fecha_nacimiento} onChange={handleChange} />
               </Grid>
 
-              <Grid item xs={12} sm={4}>
-                <TextField select label="Sexo / Género" name="genero" fullWidth size="small"
+              <Grid item xs={12} sm={4} sx={{ width: '100%' }}>
+                <TextField select label="Sexo / Género" name="genero"  displayEmpty sx = {{ width: '200px' }} fullWidth size="small"
+ 
                   value={socio.genero} onChange={handleChange}>
                   <MenuItem value="Masculino">Masculino</MenuItem>
                   <MenuItem value="Femenino">Femenino</MenuItem>
@@ -189,6 +190,7 @@ const handleCategoriaChange = (e) => {
           defaultValue="Seleccionar"
           value={socio.disciplina}
           onChange={handleDisciplinaChange}
+          sx = {{ width: '200px' }}
         >
           <MenuItem value="Futbol">Fútbol</MenuItem>
           <MenuItem value="Hockey">Hockey</MenuItem>
@@ -207,6 +209,7 @@ const handleCategoriaChange = (e) => {
           value={socio.categoria}
           onChange={handleCategoriaChange}
           disabled={!socio.disciplina}
+          sx = {{ width: '200px' }}
         >
           {socio.disciplina &&
             Object.keys(disciplinas[socio.disciplina]).map((cat) => (
@@ -228,6 +231,7 @@ const handleCategoriaChange = (e) => {
           value={socio.equipo}
           onChange={handleChange}
           disabled={!socio.categoria}
+          sx = {{ width: '200px' }}
         >
           {socio.disciplina &&
             socio.categoria &&
@@ -303,6 +307,7 @@ const handleCategoriaChange = (e) => {
           size="small"
           value={socio.apto_medico}
           onChange={handleChange}
+          sx = {{ width: '200px' }}
         >
           <MenuItem value="Si">Sí</MenuItem>
           <MenuItem value="No">No</MenuItem>
@@ -375,6 +380,7 @@ const handleCategoriaChange = (e) => {
           size="small"
           value={socio.autorizacion_imagen}
           onChange={handleChange}
+          sx = {{ width: '200px' }}
         >
           <MenuItem value="Si">Sí</MenuItem>
           <MenuItem value="No">No</MenuItem>
@@ -390,6 +396,7 @@ const handleCategoriaChange = (e) => {
           size="small"
           value={socio.autorizacion_viajes}
           onChange={handleChange}
+          sx = {{ width: '200px' }}
         >
           <MenuItem value="Si">Sí</MenuItem>
           <MenuItem value="No">No</MenuItem>

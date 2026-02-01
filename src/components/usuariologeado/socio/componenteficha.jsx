@@ -165,7 +165,7 @@ const SocioEditar = () => {
                 value={socio.fecha_nacimiento} onChange={handleChange} />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField select label="Género" name="genero" fullWidth size="small"
+              <TextField select label="Género" name="genero" fullWidth size="small" sx = {{ width: '200px' }}
                 value={socio.genero} onChange={handleChange}>
                 <MenuItem value="Masculino">Masculino</MenuItem>
                 <MenuItem value="Femenino">Femenino</MenuItem>
@@ -181,7 +181,7 @@ const SocioEditar = () => {
         <Box sx={sectionBody}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
-              <TextField select label="Disciplina" fullWidth size="small"
+              <TextField select label="Disciplina" fullWidth size="small" sx = {{ width: '200px' }}
                 value={socio.disciplina} onChange={handleDisciplinaChange}>
                 <MenuItem value="Futbol">Fútbol</MenuItem>
                 <MenuItem value="Hockey">Hockey</MenuItem>
@@ -190,7 +190,7 @@ const SocioEditar = () => {
             </Grid>
 
             <Grid item xs={12} sm={4}>
-              <TextField select label="Categoría" fullWidth size="small"
+              <TextField select label="Categoría" fullWidth size="small" sx = {{ width: '200px' }}
                 value={socio.categoria} onChange={handleCategoriaChange}
                 disabled={!socio.disciplina}>
                 {socio.disciplina &&
@@ -201,7 +201,7 @@ const SocioEditar = () => {
             </Grid>
 
             <Grid item xs={12} sm={4}>
-              <TextField select label="Equipo" name="equipo" fullWidth size="small"
+              <TextField select label="Equipo" name="equipo" fullWidth size="small" sx = {{ width: '200px' }}
                 value={socio.equipo} onChange={handleChange}
                 disabled={!socio.categoria}>
                 {socio.disciplina && socio.categoria &&
@@ -266,7 +266,7 @@ const SocioEditar = () => {
         <Box sx={sectionBody}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
-              <TextField select label="Apto médico" name="apto_medico" fullWidth size="small"
+              <TextField select label="Apto médico" name="apto_medico" fullWidth size="small"sx = {{ width: '200px' }}
                 value={socio.apto_medico} onChange={handleChange}>
                 <MenuItem value="Si">Sí</MenuItem>
                 <MenuItem value="No">No</MenuItem>
@@ -303,7 +303,7 @@ const SocioEditar = () => {
         <Box sx={sectionBody}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <TextField select label="Uso de imagen" name="autorizacion_imagen" fullWidth size="small"
+              <TextField select label="Uso de imagen" name="autorizacion_imagen" fullWidth size="small" sx = {{ width: '200px' }}
                 value={socio.autorizacion_imagen} onChange={handleChange}>
                 <MenuItem value="Si">Sí</MenuItem>
                 <MenuItem value="No">No</MenuItem>
@@ -311,7 +311,7 @@ const SocioEditar = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <TextField select label="Viajes / salidas" name="autorizacion_viajes" fullWidth size="small"
+              <TextField select label="Viajes / salidas" name="autorizacion_viajes" fullWidth size="small" sx = {{ width: '200px' }}
                 value={socio.autorizacion_viajes} onChange={handleChange}>
                 <MenuItem value="Si">Sí</MenuItem>
                 <MenuItem value="No">No</MenuItem>
