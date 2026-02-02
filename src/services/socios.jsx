@@ -80,7 +80,13 @@ const traercuotas = async (id) => {
 
 }
 
+const traercuotastodas = async () => {
 
+  // const data = await axios.post('http://localhost:4000/signupp', datos)
+  const { data } = await axios.get(baseUrl + 'traercuotastodas/' ,config)
+  return data
+
+}
 const borrarpaciente = async (datos)=> {
     const {data } = await axios.post(baseUrl + 'borrarpaciente' ,datos,config)
     return data 
@@ -174,4 +180,4 @@ const pagarcuota = async (datos) => {
   return data
 
 }
-export default {traercuotas, pagarcuota, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}
+export default {traercuotastodas, traercuotas, pagarcuota, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}
