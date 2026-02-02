@@ -37,6 +37,8 @@ const meses = [
 
 const CuotasSocio = () => {
   const { id } = useParams();
+const [openDetalle, setOpenDetalle] = useState(false);
+const [detalleCuota, setDetalleCuota] = useState(null);
 
   const [cuotas, setCuotas] = useState([]);
   const [open, setOpen] = useState(false);
@@ -47,6 +49,21 @@ const CuotasSocio = () => {
     fecha_pago: "",
     medio: "",
   });
+const verDetalle = (mes, anio) => {
+  const cuota = cuotas.find(
+    (c) => Number(c.mes) === mes && Number(c.anio) === Number(anio)
+  );
+
+  if (cuota) {
+    setDetalleCuota(cuota);
+    setOpenDetalle(true);
+  }
+};
+
+const cerrarDetalle = () => {
+  setOpenDetalle(false);
+  setDetalleCuota(null);
+};
 
   /* =========================
      TRAER CUOTAS
@@ -129,7 +146,7 @@ const CuotasSocio = () => {
       </Typography>
 
       {/* ================= TABLA HORIZONTAL ================= */}
-      <Paper sx={{ mb: 4, p: 2 }}>
+     {/*  <Paper sx={{ mb: 4, p: 2 }}>
         <Typography variant="h6" mb={2}>
           Estado mensual ({anioActual})
         </Typography>
@@ -165,7 +182,7 @@ const CuotasSocio = () => {
           </TableBody>
         </Table>
       </Paper>
-
+ */}
       {/* ================= CALENDARIO MENSUAL ================= */}
       <Paper sx={{ mb: 4, p: 2 }}>
         <Typography variant="h6" mb={2}>
@@ -186,14 +203,24 @@ const CuotasSocio = () => {
               {meses.map((mes, index) => (
                 <Grid item xs={6} sm={4} md={3} key={index}>
                   <Paper
-                    sx={{
-                      p: 1.5,
-                      textAlign: "center",
-                      backgroundColor: estaPagado(index + 1, anio)
-                        ? "#a5d6a7"
-                        : "#ef9a9a",
-                    }}
-                  >
+  onClick={() => {
+    if (estaPagado(index + 1, anio)) {
+      verDetalle(index + 1, anio);
+    }
+  }}
+  sx={{
+    p: 1.5,
+    textAlign: "center",
+    backgroundColor: estaPagado(index + 1, anio)
+      ? "#a5d6a7"
+      : "#ef9a9a",
+    cursor: estaPagado(index + 1, anio) ? "pointer" : "default",
+    "&:hover": estaPagado(index + 1, anio)
+      ? { opacity: 0.8 }
+      : {},
+  }}
+>
+
                     <Typography fontWeight="bold">{mes}</Typography>
                     <Typography variant="body2">
                       {estaPagado(index + 1, anio)
@@ -283,6 +310,54 @@ const CuotasSocio = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {/* ================= DIALOG DETALLE ================= */}
+<Dialog
+  open={openDetalle}
+  onClose={cerrarDetalle}
+  maxWidth="sm"
+  fullWidth
+>
+  <DialogTitle>Detalle del Pago</DialogTitle>
+
+  <DialogContent dividers>
+    {detalleCuota && (
+      <Box>
+
+        <Typography mb={1}>
+          <strong>Mes:</strong>{" "}
+          {meses[detalleCuota.mes - 1]}
+        </Typography>
+
+        <Typography mb={1}>
+          <strong>Año:</strong> {detalleCuota.anio}
+        </Typography>
+
+        <Typography mb={1}>
+          <strong>Monto:</strong> $
+          {detalleCuota.monto}
+        </Typography>
+
+        <Typography mb={1}>
+          <strong>Fecha:</strong>{" "}
+          {detalleCuota.fecha_pago}
+        </Typography>
+
+        <Typography mb={1}>
+          <strong>Medio:</strong>{" "}
+          {detalleCuota.medio}
+        </Typography>
+
+      </Box>
+    )}
+  </DialogContent>
+
+  <DialogActions>
+    <Button onClick={cerrarDetalle} variant="contained">
+      Cerrar
+    </Button>
+  </DialogActions>
+</Dialog>
+
     </Box>
   );
 };

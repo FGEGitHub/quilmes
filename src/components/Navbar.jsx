@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
+import logo from "../assets/quilmes.png"; // ajustá la ruta si hace falta
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +32,11 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="logo">Club Atlético Quilmes</div>
+  <div className="logo">
+  <img src={logo} alt="Logo Quilmes"  style={{ width: "50px", display: "flex", alignItems: "center", gap: "10px" }}/>
+  <span>Club Atlético Quilmes</span>
+</div>
+
 
       <div className="menu-toggle" onClick={() => setIsOpen(!isOpen)}>
         ☰

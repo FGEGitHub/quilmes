@@ -233,23 +233,26 @@ export default function Ingresos() {
 
         )}
 
-       <Button
+ 
+
+      </Box>   <Button
   variant="contained"
+  size="small"   // ⬅️ IMPORTANTE
   sx={{
     color: "white",
-    backgroundColor: "hsla(249, 88%, 75%, 1.00)",
-    fontSize: "0.90rem",
-    borderRadius: "999px",   // ⬅️ clave
-    px: 2,                   // padding horizontal
-    py: 0.6,                 // padding vertical
-    textTransform: "none",   // evita MAYÚSCULAS
+    backgroundColor: "rgb(102, 80, 227)",
+    fontSize: "0.85rem",
+    borderRadius: "999px",
+    px: 1.5,
+    py: 0.3,
+    minHeight: "auto",   // ⬅️ pisa el minHeight
+    textTransform: "none",
   }}
   onClick={() => navigate("/usuario/nuevosocio")}
 >
   ➕ Nuevo Socio
 </Button>
 
-      </Box>
 
 
       {/* TABLA */}
@@ -286,7 +289,7 @@ export default function Ingresos() {
         >
 
           <Typography fontWeight={700}>
-          Nro: {row.id} - {row.apellido} {row.nombre}
+          Nro Socio: {row.id} - {row.apellido} {row.nombre}
           </Typography>
 
           <Chip

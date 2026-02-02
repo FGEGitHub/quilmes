@@ -45,10 +45,12 @@ const Login = () => {
       const user = JSON.parse(loggedUserJSON)
       
       switch (user.nivel) {
-        case 1:
+        case "1":
           navigate('/usuario/socios')
           break;
-       
+         case "2":
+          navigate('/usuario/socios')
+          break;
         default:
           
           break;

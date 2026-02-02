@@ -17,6 +17,9 @@ body {
   padding-top: 70px; /* ajusta según la altura del navbar */
 }
 .logo {
+  display: flex;
+  align-items: center;   /* 🔥 centra vertical */
+  gap: 10px;             /* espacio entre imagen y texto */
   font-weight: bold;
   font-size: 20px;
   color: #3b82f6;
