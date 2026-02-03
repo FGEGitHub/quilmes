@@ -13,6 +13,15 @@ import {
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import servicioSocios from "../../../services/socios";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
+} from "@mui/material";
+
+
 
 const sectionStyle = {
   border: "1px solid #c62828",
@@ -84,6 +93,7 @@ const SocioEditar = () => {
     fecha_inscripcion: "",
     obs_internas: ""
   });
+const [openDelete, setOpenDelete] = useState(false);
 
   /* 🔹 TRAER SOCIO */
   useEffect(() => {
@@ -137,6 +147,20 @@ const SocioEditar = () => {
   } catch (error) {
     console.error(error);
     alert("Error al actualizar socio");
+  }
+};
+const handleEliminar = async () => {
+  try {
+    await servicioSocios.eliminarsocio(id);
+
+    alert("Socio eliminado correctamente");
+
+    navigate("/usuario/socios"); // ajustá si tu ruta es otra
+  } catch (error) {
+    console.error(error);
+    alert("Error al eliminar socio");
+  } finally {
+    setOpenDelete(false);
   }
 };
 
@@ -359,10 +383,52 @@ const SocioEditar = () => {
       {/* BOTONES */}
       <Box sx={{ display: "flex", gap: 2 }}>
         <Button variant="contained" onClick={handleGuardar}>Guardar cambios</Button>
+        <Button
+  variant="contained"
+  color="error"
+  onClick={() => setOpenDelete(true)}
+>
+  Eliminar socio
+</Button>
+
         <Button variant="outlined" onClick={() => navigate(-1)}>Cancelar</Button>
       </Box>
 
     </CardContent>
+    {/* MODAL ELIMINAR */}
+<Dialog
+  open={openDelete}
+  onClose={() => setOpenDelete(false)}
+>
+  <DialogTitle>
+    ⚠️ Confirmar eliminación
+  </DialogTitle>
+
+  <DialogContent>
+    <DialogContentText>
+      ¿Estás seguro que querés eliminar este socio?
+      <br />
+      Esta acción no se puede deshacer.
+    </DialogContentText>
+  </DialogContent>
+
+  <DialogActions>
+    <Button
+      onClick={() => setOpenDelete(false)}
+    >
+      Cancelar
+    </Button>
+
+    <Button
+      onClick={handleEliminar}
+      color="error"
+      variant="contained"
+    >
+      Sí, eliminar
+    </Button>
+  </DialogActions>
+</Dialog>
+
   </Card>
 );
 
