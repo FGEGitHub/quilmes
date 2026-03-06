@@ -49,7 +49,7 @@ export default function Ingresos() {
   const [inscrip, setInscrip] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroCuota, setFiltroCuota] = useState("todos");
-
+const [mostrarTodos, setMostrarTodos] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -100,32 +100,36 @@ export default function Ingresos() {
 
   /* ---------- FILTER ---------- */
 
-  const filteredRows = inscrip.filter((row) => {
+ const filteredRows = inscrip.filter((row) => {
 
-    const coincide =
-      `${row.nombre} ${row.apellido} ${row.dni}`
-        .toLowerCase()
-        .includes(searchTerm);
+  /* si no escribió nada y no seleccionó ver todos */
+  if (!mostrarTodos && searchTerm === "") return false;
 
-    if (!coincide) return false;
+  const coincide =
+    `${row.nombre} ${row.apellido} ${row.dni}`
+      .toLowerCase()
+      .includes(searchTerm);
 
-    if (filtroCuota === "todos") return true;
+  if (searchTerm && !coincide) return false;
 
-    if (filtroCuota === "sinpago") {
-      return !row.ultimaCuotaMes;
-    }
+  if (filtroCuota === "todos") return true;
 
-    if (filtroCuota === "aldia") {
-      return estaAlDia(row.ultimaCuotaMes, row.ultimaCuotaAnio);
-    }
+  if (filtroCuota === "sinpago") {
+    return !row.ultimaCuotaMes;
+  }
 
-    if (filtroCuota === "atrasado") {
-      return row.ultimaCuotaMes &&
-        !estaAlDia(row.ultimaCuotaMes, row.ultimaCuotaAnio);
-    }
+  if (filtroCuota === "aldia") {
+    return estaAlDia(row.ultimaCuotaMes, row.ultimaCuotaAnio);
+  }
 
-    return true;
-  });
+  if (filtroCuota === "atrasado") {
+    return row.ultimaCuotaMes &&
+      !estaAlDia(row.ultimaCuotaMes, row.ultimaCuotaAnio);
+  }
+
+  return true;
+
+});
 
 
   const paginatedRows = filteredRows.slice(
@@ -205,55 +209,100 @@ export default function Ingresos() {
 
       {/* FILTROS */}
 
-      <Box sx={{ display: "flex", gap: 2, my: 2, flexWrap: "wrap" }}>
+   {/* FILTROS */}
 
-<TextField
-  label="Buscar"
-  placeholder="Ej: 30123456 o Pérez"
-  helperText="Podés buscar por DNI, nombre o apellido"
-  value={searchTerm}
-  onChange={handleSearch}
-/>
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2, my: 2 }}>
 
-        {isNivel2 && (
+  {/* FILA 1 */}
 
-          <TextField
-            select
-            label="Filtrar cuota"
-            value={filtroCuota}
-            onChange={(e) => setFiltroCuota(e.target.value)}
-            SelectProps={{ native: true }}
-            sx={{ width: 200 }}
-          >
-            <option value="todos">Todos</option>
-            <option value="aldia">Al día</option>
-            <option value="atrasado">Atrasados</option>
-            <option value="sinpago">Sin pagos</option>
-          </TextField>
+  <Box
+    sx={{
+      display: "flex",
+      gap: 2,
+      flexWrap: "wrap",
+      alignItems: "center"
+    }}
+  >
 
-        )}
+    <TextField
+      label="Buscar"
+      placeholder="Ej: 30123456 o Pérez"
+      value={searchTerm}
+      onChange={handleSearch}
+      size="small"
+      sx={{
+        flexGrow: 1,
+        minWidth: 260
+      }}
+    />
 
- 
+    <Button
+      variant="contained"
+      sx={{
+        height: 40,
+        px: 2.5,
+        borderRadius: "999px",
+        textTransform: "none",
+        fontWeight: 600,
+        backgroundColor: "rgb(102,80,227)"
+      }}
+      onClick={() => navigate("/usuario/nuevosocio")}
+    >
+      + Nuevo socio
+    </Button>
 
-      </Box>   <Button
+  </Box>
+
+
+  {/* FILA 2 */}
+
+  <Box
+    sx={{
+      display: "flex",
+      gap: 2,
+      flexWrap: "wrap",
+      alignItems: "center"
+    }}
+  >
+
+    {isNivel2 && (
+      <TextField
+        select
+        label="Filtrar cuota"
+        size="small"
+        value={filtroCuota}
+        onChange={(e) => setFiltroCuota(e.target.value)}
+        SelectProps={{ native: true }}
+        sx={{ width: 200 }}
+      >
+        <option value="todos">Todos</option>
+        <option value="aldia">Al día</option>
+        <option value="atrasado">Atrasados</option>
+        <option value="sinpago">Sin pagos</option>
+      </TextField>
+    )}
+
+   <Button
   variant="contained"
-  size="small"   // ⬅️ IMPORTANTE
   sx={{
-    color: "white",
-    backgroundColor: "rgb(102, 80, 227)",
-    fontSize: "0.85rem",
+    height: 40,
+    px: 2,
     borderRadius: "999px",
-    px: 1.5,
-    py: 0.3,
-    minHeight: "auto",   // ⬅️ pisa el minHeight
+    backgroundColor: "#2563EB",
+    "&:hover": {
+      backgroundColor: "#1D4ED8"
+    },
     textTransform: "none",
+    fontWeight: 600
   }}
-  onClick={() => navigate("/usuario/nuevosocio")}
+  onClick={() => setMostrarTodos(true)}
 >
-  ➕ Nuevo Socio
+  Ver todos
 </Button>
 
+  </Box>
 
+</Box>
 
       {/* TABLA */}
 
@@ -363,7 +412,7 @@ export default function Ingresos() {
           sx={{ mt: 1 }}
           onClick={() => navigate(`/usuario/socio/${row.id}`)}
         >
-          Ver Detalle
+          Ver Socio
         </Button>
 
       </Paper>

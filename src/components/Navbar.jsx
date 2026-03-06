@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
-import logo from "../assets/nuevo.jpeg"; // ajustá la ruta si hace falta
+import logo from "../assets/nuevo.png"; // ajustá la ruta si hace falta
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);

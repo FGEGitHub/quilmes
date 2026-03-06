@@ -18,7 +18,7 @@ import 'antd/dist/antd.css'
 import servicioUsuario from '../../services/usuarios'
 import Checkbox from '@mui/material/Checkbox';
 import Nav from '../../components/Navbar.jsx'
-import marcas from '../../assets/nuevo.jpeg'
+import marcas from '../../assets/nuevo.png'
 
 
 const Login = () => {
