@@ -13,6 +13,7 @@ const HeroSection = () => {
     <>
       <Nav />
       <Box sx={{ mt: isMobile ? 0 : "-1%" }}>
+        <br/> <br/> 
         <Componente />
       </Box>
       <Footer />
