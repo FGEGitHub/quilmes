@@ -91,8 +91,10 @@ const cerrarDetalle = () => {
     );
   };
 
-  const aniosDisponibles = [...new Set(cuotas.map((c) => c.anio))];
-
+const aniosDisponibles =
+  cuotas.length > 0
+    ? [...new Set(cuotas.map((c) => c.anio))]
+    : [new Date().getFullYear()];
   const anioActual = new Date().getFullYear();
 
   /* =========================
