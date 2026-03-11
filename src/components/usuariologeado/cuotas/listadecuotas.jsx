@@ -1,88 +1,84 @@
-import * as React from "react";
+import * as React from 'react';
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-
-import servicioSocios from "../../../services/socios";
+import servicioFidei from '../../../services/socios';
 
 import {
-  Box,
-  Typography,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TablePagination,
-  TextField,
-  MenuItem,
-  Chip,
-  useTheme,
-  useMediaQuery
-} from "@mui/material";
+  Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, TablePagination,
+  Box, Typography, Chip, TextField, Button
+} from '@mui/material';
 
+import { useTheme, useMediaQuery } from "@mui/material";
+import { alpha } from "@mui/material/styles";
+import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 
-const meses = [
-  "Enero","Febrero","Marzo","Abril","Mayo","Junio",
-  "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
-];
+export default function Ingresos() {
 
-export default function CuotasGenerales() {
-
+  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  /* ================= STATES ================= */
+  /* USER */
 
-  const [cuotas, setCuotas] = useState([]);
+  const loggedUserJSON = window.localStorage.getItem("loggedNoteAppUser");
 
-  const [mesFiltro, setMesFiltro] = useState("");
-  const [anioFiltro, setAnioFiltro] = useState("");
+  let userContext = null;
+
+  if (loggedUserJSON) {
+    try {
+      userContext = JSON.parse(loggedUserJSON);
+    } catch {
+      window.localStorage.removeItem("loggedNoteAppUser");
+    }
+  }
+
+  const isNivel2 = userContext?.nivel === "2";
+
+  /* STATES */
+
+  const [inscrip, setInscrip] = useState([]);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoriaFiltro, setCategoriaFiltro] = useState("");
+
+  const [mesCuotaFiltro, setMesCuotaFiltro] = useState("");
+  const [anioCuotaFiltro, setAnioCuotaFiltro] = useState("");
+
+  const [filtroCuota, setFiltroCuota] = useState("todos");
+
+  const [mostrarTodos, setMostrarTodos] = useState(false);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-
-  /* ================= DATA ================= */
+  /* DATA */
 
   useEffect(() => {
-    traerCuotas();
+    traer();
   }, []);
 
-  const traerCuotas = async () => {
-    try {
-      const res = await servicioSocios.traercuotastodas();
-      setCuotas(res);
-    } catch (error) {
-      console.error(error);
-      alert("Error al cargar cuotas");
-    }
+  const traer = async () => {
+    const ins = await servicioFidei.traersocios();
+    setInscrip(ins);
   };
 
+  /* HELPERS */
 
-  /* ================= FILTER ================= */
+  const estaAlDia = (mes, anio) => {
 
-  const filteredRows = cuotas.filter((row) => {
+    if (!mes || !anio) return false;
 
-    if (mesFiltro && Number(row.mes) !== Number(mesFiltro)) {
-      return false;
-    }
+    const hoy = new Date();
 
-    if (anioFiltro && Number(row.anio) !== Number(anioFiltro)) {
-      return false;
-    }
+    return (
+      mes === hoy.getMonth() + 1 &&
+      anio === hoy.getFullYear()
+    );
 
-    return true;
-  });
+  };
 
-
-  const paginatedRows = filteredRows.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
-
-  /* ================= PAGINATION ================= */
+  /* EVENTS */
 
   const handleChangePage = (e, newPage) => {
     setPage(newPage);
@@ -93,209 +89,327 @@ export default function CuotasGenerales() {
     setPage(0);
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+    setPage(0);
+  };
 
-  /* ================= RENDER ================= */
+  /* FILTER */
+
+  const filteredRows = inscrip.filter((row) => {
+
+    if (!mostrarTodos && searchTerm === "") return false;
+
+    const nombreCompleto =
+      `${row.nombre} ${row.apellido}`.toLowerCase();
+
+    if (
+      searchTerm &&
+      !nombreCompleto.includes(searchTerm)
+    ) return false;
+
+    if (
+      categoriaFiltro &&
+      !row.categoria?.toLowerCase().includes(categoriaFiltro.toLowerCase())
+    ) return false;
+
+    if (
+      mesCuotaFiltro &&
+      Number(row.ultimaCuotaMes) !== Number(mesCuotaFiltro)
+    ) return false;
+
+    if (
+      anioCuotaFiltro &&
+      Number(row.ultimaCuotaAnio) !== Number(anioCuotaFiltro)
+    ) return false;
+
+    if (filtroCuota === "sinpago") {
+      return !row.ultimaCuotaMes;
+    }
+
+    if (filtroCuota === "aldia") {
+      return estaAlDia(row.ultimaCuotaMes, row.ultimaCuotaAnio);
+    }
+
+    if (filtroCuota === "atrasado") {
+      return row.ultimaCuotaMes &&
+        !estaAlDia(row.ultimaCuotaMes, row.ultimaCuotaAnio);
+    }
+
+    return true;
+
+  });
+
+  const paginatedRows = filteredRows.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  /* RENDER */
 
   return (
+    <>
 
-    <Box>
+      {/* HEADER */}
 
-      {/* ================= HEADER ================= */}
-
-      <Paper sx={{ p: 2.5, mb: 2, borderRadius: 3 }}>
-
-        <Typography fontWeight={900}>
-          Registro General de Cuotas
-        </Typography>
-
-        <Typography fontSize={13}>
-          Pagos por mes y año
-        </Typography>
-
-      </Paper>
-
-
-      {/* ================= FILTROS ================= */}
-
-      <Box
+      <Paper
+        elevation={0}
         sx={{
-          display: "flex",
-          gap: 2,
-          mb: 2,
-          flexWrap: "wrap"
+          borderRadius: 3,
+          px: 2.5,
+          py: 2.25,
+          background:
+            "linear-gradient(90deg, #0a3b4f 0%, #0b4f6c 55%, #0f7f86 100%)",
+          boxShadow: "0 14px 35px rgba(15,127,134,0.25)",
+          color: "#fff",
+          border: `1px solid ${alpha("#ffffff", 0.12)}`,
         }}
       >
 
-        {/* MES */}
-
-        <TextField
-          select
-          label="Mes"
-          value={mesFiltro}
-          onChange={(e) => setMesFiltro(e.target.value)}
-          sx={{ width: 160 }}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 2
+          }}
         >
-          <MenuItem value="">Todos</MenuItem>
 
-          {meses.map((mes, i) => (
-            <MenuItem key={i} value={i + 1}>
-              {mes}
-            </MenuItem>
-          ))}
-        </TextField>
+          <Box sx={{ display: "flex", gap: 1.2 }}>
 
-
-        {/* AÑO */}
-
-        <TextField
-          label="Año"
-          type="number"
-          value={anioFiltro}
-          onChange={(e) => setAnioFiltro(e.target.value)}
-          sx={{ width: 120 }}
-          placeholder="2026"
-        />
-
-      </Box>
-
-
-      {/* ================= MOBILE ================= */}
-
-      {isMobile ? (
-
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-
-          {paginatedRows.map((row) => (
-
-            <Paper
-              key={row.id}
-              sx={{ p: 2, borderRadius: 3 }}
+            <Box
+              sx={{
+                width: 40,
+                height: 44,
+                borderRadius: 2,
+                background: "rgba(48, 11, 179, 1)",
+                display: "grid",
+                placeItems: "center",
+              }}
             >
+              <PeopleRoundedIcon sx={{ color: "#fff" }} />
+            </Box>
 
-              <Typography fontWeight={700}>
-                {row.apellido} {row.nombre}
+            <Box>
+              <Typography fontWeight={900}>Socios</Typography>
+              <Typography fontSize={13}>
+                Listado general
               </Typography>
+            </Box>
 
-              <Typography fontSize={14}>
-                <b>Disciplina:</b>{" "}
-                {row.disciplina} {row.categoria}
-              </Typography>
+          </Box>
 
-              <Typography fontSize={14}>
-                <b>Periodo:</b>{" "}
-                {meses[row.mes - 1]} / {row.anio}
-              </Typography>
-
-              <Typography fontSize={14}>
-                <b>Monto:</b> ${row.monto}
-              </Typography>
-
-              <Typography fontSize={14}>
-                <b>Medio:</b> {row.medio}
-              </Typography>
-
-              <Chip
-                size="small"
-                label={row.fecha_pago}
-                sx={{ mt: 1 }}
-              />
-
-            </Paper>
-
-          ))}
+          <Chip
+            label={`Cantidad: ${inscrip.length}`}
+            sx={{
+              color: "#fff",
+              fontWeight: 900,
+              background: "rgba(255,255,255,0.14)",
+            }}
+          />
 
         </Box>
 
-      ) : (
+      </Paper>
 
-        /* ================= DESKTOP ================= */
+      {/* FILTROS */}
 
-        <Paper>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, my: 2 }}>
 
-          <TableContainer>
+        <TextField
+          label="Buscar nombre o apellido"
+          value={searchTerm}
+          onChange={handleSearch}
+          size="small"
+          sx={{ width: 220 }}
+        />
 
-            <Table>
+        <TextField
+          label="Categoría"
+          value={categoriaFiltro}
+          onChange={(e) => setCategoriaFiltro(e.target.value)}
+          size="small"
+          sx={{ width: 150 }}
+        />
 
-              <TableHead>
+        <TextField
+          label="Mes cuota"
+          type="number"
+          size="small"
+          value={mesCuotaFiltro}
+          onChange={(e) => setMesCuotaFiltro(e.target.value)}
+          sx={{ width: 120 }}
+        />
 
-                <TableRow>
+        <TextField
+          label="Año cuota"
+          type="number"
+          size="small"
+          value={anioCuotaFiltro}
+          onChange={(e) => setAnioCuotaFiltro(e.target.value)}
+          sx={{ width: 120 }}
+        />
 
-                  <TableCell><b>Apellido</b></TableCell>
-                  <TableCell><b>Nombre</b></TableCell>
-                  <TableCell><b>Disciplina</b></TableCell>
-                  <TableCell><b>Mes/Año</b></TableCell>
-                  <TableCell><b>Monto</b></TableCell>
-                  <TableCell><b>Medio</b></TableCell>
-                  <TableCell><b>Fecha</b></TableCell>
+        {isNivel2 && (
+          <TextField
+            select
+            label="Estado cuota"
+            size="small"
+            value={filtroCuota}
+            onChange={(e) => setFiltroCuota(e.target.value)}
+            SelectProps={{ native: true }}
+            sx={{ width: 160 }}
+          >
+            <option value="todos">Todos</option>
+            <option value="aldia">Al día</option>
+            <option value="atrasado">Atrasados</option>
+            <option value="sinpago">Sin pagos</option>
+          </TextField>
+        )}
+
+        <Button
+          variant="contained"
+          sx={{
+            height: 40,
+            px: 2,
+            borderRadius: "999px",
+            backgroundColor: "#2563EB",
+            textTransform: "none",
+            fontWeight: 600
+          }}
+          onClick={() => setMostrarTodos(true)}
+        >
+          Ver todos
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{
+            height: 40,
+            px: 2.5,
+            borderRadius: "999px",
+            backgroundColor: "rgb(102,80,227)",
+            textTransform: "none",
+            fontWeight: 600
+          }}
+          onClick={() => navigate("/usuario/nuevosocio")}
+        >
+          + Nuevo socio
+        </Button>
+
+      </Box>
+
+      {/* TABLA */}
+
+      <Paper>
+
+        <TableContainer>
+
+          <Table>
+
+            <TableHead>
+
+              <TableRow>
+
+                <TableCell><b>ID</b></TableCell>
+                <TableCell><b>DNI</b></TableCell>
+                <TableCell><b>Apellido</b></TableCell>
+                <TableCell><b>Nombre</b></TableCell>
+                <TableCell><b>Disciplina</b></TableCell>
+
+                {isNivel2 && (
+                  <TableCell><b>Última Cuota</b></TableCell>
+                )}
+
+                <TableCell><b>Acciones</b></TableCell>
+
+              </TableRow>
+
+            </TableHead>
+
+            <TableBody>
+
+              {paginatedRows.map((row) => (
+
+                <TableRow key={row.id}>
+
+                  <TableCell>{row.id}</TableCell>
+                  <TableCell>{row.dni}</TableCell>
+                  <TableCell>{row.apellido}</TableCell>
+                  <TableCell>{row.nombre}</TableCell>
+
+                  <TableCell>
+                    {row.disciplina} {row.categoria ? `- ${row.categoria}` : ''}
+                  </TableCell>
+
+                  {isNivel2 && (
+
+                    <TableCell>
+
+                      {row.ultimaCuotaMes ? (
+
+                        <Chip
+                          size="small"
+                          label={`${row.ultimaCuotaMes}/${row.ultimaCuotaAnio}`}
+                          color={
+                            estaAlDia(
+                              row.ultimaCuotaMes,
+                              row.ultimaCuotaAnio
+                            )
+                              ? "success"
+                              : "warning"
+                          }
+                        />
+
+                      ) : (
+
+                        <Chip
+                          size="small"
+                          label="Sin pagos"
+                          color="error"
+                        />
+
+                      )}
+
+                    </TableCell>
+
+                  )}
+
+                  <TableCell>
+
+                    <Button
+                      size="small"
+                      onClick={() =>
+                        navigate(`/usuario/socio/${row.id}`)
+                      }
+                    >
+                      Ver
+                    </Button>
+
+                  </TableCell>
 
                 </TableRow>
 
-              </TableHead>
+              ))}
 
+            </TableBody>
 
-              <TableBody>
+          </Table>
 
-                {paginatedRows.map((row) => (
+        </TableContainer>
 
-                  <TableRow key={row.id}>
+        <TablePagination
+          component="div"
+          count={filteredRows.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[10, 50, 100]}
+        />
 
-                    <TableCell>{row.apellido}</TableCell>
-                    <TableCell>{row.nombre}</TableCell>
+      </Paper>
 
-                    <TableCell>
-                      {row.disciplina} {row.categoria}
-                    </TableCell>
-
-                    <TableCell>
-                      {meses[row.mes - 1]} / {row.anio}
-                    </TableCell>
-
-                    <TableCell>${row.monto}</TableCell>
-
-                    <TableCell>{row.medio}</TableCell>
-
-                    <TableCell>{row.fecha_pago}</TableCell>
-
-                  </TableRow>
-
-                ))}
-
-
-                {paginatedRows.length === 0 && (
-
-                  <TableRow>
-
-                    <TableCell colSpan={7} align="center">
-
-                      Sin resultados
-
-                    </TableCell>
-
-                  </TableRow>
-
-                )}
-
-              </TableBody>
-
-            </Table>
-
-          </TableContainer>
-
-
-          <TablePagination
-            component="div"
-            count={filteredRows.length}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={[10, 25, 50]}
-          />
-
-        </Paper>
-
-      )}
-
-    </Box>
+    </>
   );
 }
