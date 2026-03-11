@@ -6,8 +6,10 @@ import servicioFidei from '../../../services/socios';
 import {
   Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Paper, TablePagination,
-  Box, Typography, Chip, TextField, Button
-} from '@mui/material';
+  Box, Typography, Chip, TextField, Button,
+  Dialog, DialogTitle, DialogContent, DialogActions,
+  MenuItem, Grid
+} from "@mui/material";
 
 import { useTheme, useMediaQuery } from "@mui/material";
 import { alpha } from "@mui/material/styles";
@@ -51,7 +53,14 @@ export default function Ingresos() {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
+const [openPago, setOpenPago] = useState(false);
+const [socioSeleccionado, setSocioSeleccionado] = useState(null);
+const [formPago, setFormPago] = useState({
+  mes: "",
+  anio: new Date().getFullYear(),
+  fecha_pago: "",
+  medio: ""
+});
   /* DATA */
 
   useEffect(() => {
@@ -64,7 +73,48 @@ export default function Ingresos() {
   };
 
   /* HELPERS */
+const abrirPago = (socio) => {
+  setSocioSeleccionado(socio);
+  setOpenPago(true);
+};
 
+const cerrarPago = () => {
+  setOpenPago(false);
+  setSocioSeleccionado(null);
+};
+
+const handleChangePago = (e) => {
+  setFormPago({
+    ...formPago,
+    [e.target.name]: e.target.value
+  });
+};
+
+const pagarCuota = async () => {
+
+  if (!formPago.mes) {
+    alert("Seleccione mes");
+    return;
+  }
+
+  try {
+
+    await servicioFidei.pagarcuota({
+      socio_id: socioSeleccionado.id,
+      ...formPago
+    });
+
+    alert("Cuota registrada");
+
+    cerrarPago();
+    traer(); // refresca socios
+
+  } catch (error) {
+    console.error(error);
+    alert("Error al registrar pago");
+  }
+
+};
   const estaAlDia = (mes, anio) => {
 
     if (!mes || !anio) return false;
@@ -303,100 +353,240 @@ export default function Ingresos() {
 
       <Paper>
 
-        <TableContainer>
+      {isMobile ? (
 
-          <Table>
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
 
-            <TableHead>
+{paginatedRows.map((row) => (
 
-              <TableRow>
+<Paper
+key={row.id}
+sx={{
+p:2,
+borderRadius:3,
+display:"flex",
+flexDirection:"column",
+gap:1.5
+}}
+>
 
-                <TableCell><b>ID</b></TableCell>
-                <TableCell><b>DNI</b></TableCell>
-                <TableCell><b>Apellido</b></TableCell>
-                <TableCell><b>Nombre</b></TableCell>
-                <TableCell><b>Disciplina</b></TableCell>
+<Box sx={{display:"flex", justifyContent:"space-between"}}>
 
-                {isNivel2 && (
-                  <TableCell><b>Última Cuota</b></TableCell>
-                )}
+<Typography fontWeight={700}>
+{row.apellido} {row.nombre}
+</Typography>
 
-                <TableCell><b>Acciones</b></TableCell>
+<Typography fontSize={13} color="text.secondary">
+ID {row.id}
+</Typography>
 
-              </TableRow>
+</Box>
 
-            </TableHead>
+<Typography fontSize={14}>
+DNI: {row.dni}
+</Typography>
 
-            <TableBody>
+<Typography fontSize={14}>
+{row.disciplina} {row.categoria ? `- ${row.categoria}` : ''}
+</Typography>
 
-              {paginatedRows.map((row) => (
+{isNivel2 && (
 
-                <TableRow key={row.id}>
+<Box>
 
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.dni}</TableCell>
-                  <TableCell>{row.apellido}</TableCell>
-                  <TableCell>{row.nombre}</TableCell>
+{row.ultimaCuotaMes ? (
 
-                  <TableCell>
-                    {row.disciplina} {row.categoria ? `- ${row.categoria}` : ''}
-                  </TableCell>
+<Chip
+size="small"
+label={`${row.ultimaCuotaMes}/${row.ultimaCuotaAnio}`}
+color={
+estaAlDia(
+row.ultimaCuotaMes,
+row.ultimaCuotaAnio
+)
+? "success"
+: "warning"
+}
+/>
 
-                  {isNivel2 && (
+) : (
 
-                    <TableCell>
+<Chip
+size="small"
+label="Sin pagos"
+color="error"
+/>
 
-                      {row.ultimaCuotaMes ? (
+)}
 
-                        <Chip
-                          size="small"
-                          label={`${row.ultimaCuotaMes}/${row.ultimaCuotaAnio}`}
-                          color={
-                            estaAlDia(
-                              row.ultimaCuotaMes,
-                              row.ultimaCuotaAnio
-                            )
-                              ? "success"
-                              : "warning"
-                          }
-                        />
+</Box>
 
-                      ) : (
+)}
 
-                        <Chip
-                          size="small"
-                          label="Sin pagos"
-                          color="error"
-                        />
+<Box sx={{display:"flex", gap:1, mt:1}}>
 
-                      )}
+<Button
+size="small"
+variant="contained"
+color="success"
+onClick={() => abrirPago(row)}
+>
+Pagar
+</Button>
 
-                    </TableCell>
+<Button
+size="small"
+variant="outlined"
+onClick={() =>
+navigate(`/usuario/socio/${row.id}`)
+}
+>
+Ver
+</Button>
 
-                  )}
+</Box>
 
-                  <TableCell>
+</Paper>
 
-                    <Button
-                      size="small"
-                      onClick={() =>
-                        navigate(`/usuario/socio/${row.id}`)
-                      }
-                    >
-                      Ver
-                    </Button>
+))}
 
-                  </TableCell>
+<TablePagination
+component="div"
+count={filteredRows.length}
+page={page}
+onPageChange={handleChangePage}
+rowsPerPage={rowsPerPage}
+onRowsPerPageChange={handleChangeRowsPerPage}
+rowsPerPageOptions={[10, 50, 100]}
+/>
 
-                </TableRow>
+</Box>
 
-              ))}
+) : (
 
-            </TableBody>
+<Paper>
 
-          </Table>
+<TableContainer>
 
-        </TableContainer>
+<Table>
+
+<TableHead>
+
+<TableRow>
+
+<TableCell><b>ID</b></TableCell>
+<TableCell><b>DNI</b></TableCell>
+<TableCell><b>Apellido</b></TableCell>
+<TableCell><b>Nombre</b></TableCell>
+<TableCell><b>Disciplina</b></TableCell>
+
+{isNivel2 && (
+<TableCell><b>Última Cuota</b></TableCell>
+)}
+
+<TableCell><b>Acciones</b></TableCell>
+
+</TableRow>
+
+</TableHead>
+
+<TableBody>
+
+{paginatedRows.map((row) => (
+
+<TableRow key={row.id}>
+
+<TableCell>{row.id}</TableCell>
+<TableCell>{row.dni}</TableCell>
+<TableCell>{row.apellido}</TableCell>
+<TableCell>{row.nombre}</TableCell>
+
+<TableCell>
+{row.disciplina} {row.categoria ? `- ${row.categoria}` : ''}
+</TableCell>
+
+{isNivel2 && (
+
+<TableCell>
+
+{row.ultimaCuotaMes ? (
+
+<Chip
+size="small"
+label={`${row.ultimaCuotaMes}/${row.ultimaCuotaAnio}`}
+color={
+estaAlDia(
+row.ultimaCuotaMes,
+row.ultimaCuotaAnio
+)
+? "success"
+: "warning"
+}
+/>
+
+) : (
+
+<Chip
+size="small"
+label="Sin pagos"
+color="error"
+/>
+
+)}
+
+</TableCell>
+
+)}
+
+<TableCell>
+
+<Box sx={{display:"flex", gap:1}}>
+
+<Button
+size="small"
+variant="contained"
+color="success"
+onClick={() => abrirPago(row)}
+>
+Pagar
+</Button>
+
+<Button
+size="small"
+onClick={() =>
+navigate(`/usuario/socio/${row.id}`)
+}
+>
+Ver
+</Button>
+
+</Box>
+
+</TableCell>
+
+</TableRow>
+
+))}
+
+</TableBody>
+
+</Table>
+
+</TableContainer>
+
+<TablePagination
+component="div"
+count={filteredRows.length}
+page={page}
+onPageChange={handleChangePage}
+rowsPerPage={rowsPerPage}
+onRowsPerPageChange={handleChangeRowsPerPage}
+rowsPerPageOptions={[10, 50, 100]}
+/>
+
+</Paper>
+
+)}
 
         <TablePagination
           component="div"
@@ -407,7 +597,126 @@ export default function Ingresos() {
           onRowsPerPageChange={handleChangeRowsPerPage}
           rowsPerPageOptions={[10, 50, 100]}
         />
+<Dialog
+open={openPago}
+onClose={cerrarPago}
+maxWidth="sm"
+fullWidth
+>
 
+<DialogTitle>
+
+Pagar cuota
+
+{socioSeleccionado && (
+  <Typography fontSize={14}>
+    {socioSeleccionado.apellido} {socioSeleccionado.nombre}
+  </Typography>
+)}
+
+</DialogTitle>
+
+<DialogContent>
+
+<Grid container spacing={2} mt={1}>
+
+<Grid item xs={6}>
+
+<TextField
+select
+fullWidth
+label="Mes"
+name="mes"
+value={formPago.mes}
+onChange={handleChangePago}
+>
+
+{[
+"Enero","Febrero","Marzo","Abril","Mayo","Junio",
+"Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+].map((mes,i)=>(
+<MenuItem key={i} value={i+1}>
+{mes}
+</MenuItem>
+))}
+
+</TextField>
+
+</Grid>
+
+
+<Grid item xs={6}>
+
+<TextField
+fullWidth
+label="Año"
+type="number"
+name="anio"
+value={formPago.anio}
+onChange={handleChangePago}
+/>
+
+</Grid>
+
+
+<Grid item xs={6}>
+
+<TextField
+type="date"
+fullWidth
+name="fecha_pago"
+label="Fecha pago"
+InputLabelProps={{ shrink:true }}
+value={formPago.fecha_pago}
+onChange={handleChangePago}
+/>
+
+</Grid>
+
+
+<Grid item xs={6}>
+
+<TextField
+select
+fullWidth
+label="Medio"
+name="medio"
+value={formPago.medio}
+onChange={handleChangePago}
+>
+
+<MenuItem value="efectivo">Efectivo</MenuItem>
+<MenuItem value="transferencia">Transferencia</MenuItem>
+<MenuItem value="canje">Canje</MenuItem>
+
+</TextField>
+
+</Grid>
+
+</Grid>
+
+</DialogContent>
+
+
+<DialogActions>
+
+<Button onClick={cerrarPago}>
+Cancelar
+</Button>
+
+<Button
+variant="contained"
+color="success"
+onClick={pagarCuota}
+>
+
+Guardar
+
+</Button>
+
+</DialogActions>
+
+</Dialog>
       </Paper>
 
     </>
