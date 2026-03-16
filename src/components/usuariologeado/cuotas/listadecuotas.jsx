@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import servicioFidei from '../../../services/socios';
 import * as XLSX from "xlsx";
+
 import {
   Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, TablePagination,
+  TableHead, TableRow, Paper,
   Box, Typography, Chip, TextField, Button,
   Dialog, DialogTitle, DialogContent, DialogActions,
   MenuItem, Grid
@@ -21,8 +22,6 @@ export default function Ingresos() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  /* USER */
-
   const loggedUserJSON = window.localStorage.getItem("loggedNoteAppUser");
 
   let userContext = null;
@@ -37,31 +36,25 @@ export default function Ingresos() {
 
   const isNivel2 = userContext?.nivel === "2";
 
-  /* STATES */
-
   const [inscrip, setInscrip] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState("");
-
   const [mesCuotaFiltro, setMesCuotaFiltro] = useState("");
   const [anioCuotaFiltro, setAnioCuotaFiltro] = useState("");
-
   const [filtroCuota, setFiltroCuota] = useState("todos");
 
-  const [mostrarTodos, setMostrarTodos] = useState(false);
+  const [soloUltimas, setSoloUltimas] = useState(false);
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-const [openPago, setOpenPago] = useState(false);
-const [socioSeleccionado, setSocioSeleccionado] = useState(null);
-const [formPago, setFormPago] = useState({
-  mes: "",
-  anio: new Date().getFullYear(),
-  fecha_pago: "",
-  medio: ""
-});
-  /* DATA */
+  const [openPago, setOpenPago] = useState(false);
+  const [socioSeleccionado, setSocioSeleccionado] = useState(null);
+
+  const [formPago, setFormPago] = useState({
+    mes: "",
+    anio: new Date().getFullYear(),
+    fecha_pago: "",
+    medio: ""
+  });
 
   useEffect(() => {
     traer();
@@ -72,108 +65,81 @@ const [formPago, setFormPago] = useState({
     setInscrip(ins);
   };
 
-  /* HELPERS */
-const abrirPago = (socio) => {
-  setSocioSeleccionado(socio);
-  setOpenPago(true);
-};
-const descargarExcel = () => {
+  const abrirPago = (socio) => {
+    setSocioSeleccionado(socio);
+    setOpenPago(true);
+  };
 
-  if (filteredRows.length === 0) {
-    alert("No hay datos para exportar");
-    return;
-  }
+  const cerrarPago = () => {
+    setOpenPago(false);
+    setSocioSeleccionado(null);
+  };
 
-  const datos = filteredRows.map((row) => ({
-    ID: row.id,
-    DNI: row.dni,
-    Apellido: row.apellido,
-    Nombre: row.nombre,
-    Disciplina: row.disciplina,
-    Categoria: row.categoria || "",
-    UltimaCuotaMes: row.ultimaCuotaMes || "",
-    UltimaCuotaAnio: row.ultimaCuotaAnio || ""
-  }));
-
-  const worksheet = XLSX.utils.json_to_sheet(datos);
-  const workbook = XLSX.utils.book_new();
-
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Socios");
-
-  XLSX.writeFile(workbook, "socios_filtrados.xlsx");
-
-};
-const cerrarPago = () => {
-  setOpenPago(false);
-  setSocioSeleccionado(null);
-};
-
-const handleChangePago = (e) => {
-  setFormPago({
-    ...formPago,
-    [e.target.name]: e.target.value
-  });
-};
-
-const pagarCuota = async () => {
-
-  if (!formPago.mes) {
-    alert("Seleccione mes");
-    return;
-  }
-
-  try {
-
-    await servicioFidei.pagarcuota({
-      socio_id: socioSeleccionado.id,
-      ...formPago
+  const handleChangePago = (e) => {
+    setFormPago({
+      ...formPago,
+      [e.target.name]: e.target.value
     });
+  };
 
-    alert("Cuota registrada");
+  const pagarCuota = async () => {
 
-    cerrarPago();
-    traer(); // refresca socios
+    if (!formPago.mes) {
+      alert("Seleccione mes");
+      return;
+    }
 
-  } catch (error) {
-    console.error(error);
-    alert("Error al registrar pago");
-  }
+    try {
 
-};
-  const estaAlDia = (mes, anio) => {
+      await servicioFidei.pagarcuota({
+        socio_id: socioSeleccionado.id,
+        ...formPago
+      });
 
-    if (!mes || !anio) return false;
+      alert("Cuota registrada");
 
-    const hoy = new Date();
+      cerrarPago();
+      traer();
 
-    return (
-      mes === hoy.getMonth() + 1 &&
-      anio === hoy.getFullYear()
-    );
+    } catch (error) {
+      console.error(error);
+      alert("Error al registrar pago");
+    }
 
   };
 
-  /* EVENTS */
+  const descargarExcel = () => {
 
-  const handleChangePage = (e, newPage) => {
-    setPage(newPage);
-  };
+    if (filteredRows.length === 0) {
+      alert("No hay datos para exportar");
+      return;
+    }
 
-  const handleChangeRowsPerPage = (e) => {
-    setRowsPerPage(parseInt(e.target.value, 10));
-    setPage(0);
+    const datos = filteredRows.map((row) => ({
+      ID: row.id,
+      DNI: row.dni,
+      Apellido: row.apellido,
+      Nombre: row.nombre,
+      Disciplina: row.disciplina,
+      Categoria: row.categoria || "",
+      Cuota: `${row.mes}/${row.anio}`,
+      Ultima: row.es_ultima_cuota ? "SI" : "NO"
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(datos);
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Socios");
+
+    XLSX.writeFile(workbook, "socios_filtrados.xlsx");
+
   };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
-    setPage(0);
   };
 
-  /* FILTER */
-
   const filteredRows = inscrip.filter((row) => {
-
-    if (!mostrarTodos && searchTerm === "") return false;
 
     const nombreCompleto =
       `${row.nombre} ${row.apellido}`.toLowerCase();
@@ -190,42 +156,24 @@ const pagarCuota = async () => {
 
     if (
       mesCuotaFiltro &&
-      Number(row.ultimaCuotaMes) !== Number(mesCuotaFiltro)
+      Number(row.mes) !== Number(mesCuotaFiltro)
     ) return false;
 
     if (
       anioCuotaFiltro &&
-      Number(row.ultimaCuotaAnio) !== Number(anioCuotaFiltro)
+      Number(row.anio) !== Number(anioCuotaFiltro)
     ) return false;
 
-    if (filtroCuota === "sinpago") {
-      return !row.ultimaCuotaMes;
-    }
-
-    if (filtroCuota === "aldia") {
-      return estaAlDia(row.ultimaCuotaMes, row.ultimaCuotaAnio);
-    }
-
-    if (filtroCuota === "atrasado") {
-      return row.ultimaCuotaMes &&
-        !estaAlDia(row.ultimaCuotaMes, row.ultimaCuotaAnio);
+    if (soloUltimas && !row.es_ultima_cuota) {
+      return false;
     }
 
     return true;
 
   });
 
-  const paginatedRows = filteredRows.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
-  /* RENDER */
-
   return (
     <>
-
-      {/* HEADER */}
 
       <Paper
         elevation={0}
@@ -241,14 +189,7 @@ const pagarCuota = async () => {
         }}
       >
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 2
-          }}
-        >
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
 
           <Box sx={{ display: "flex", gap: 1.2 }}>
 
@@ -275,7 +216,7 @@ const pagarCuota = async () => {
           </Box>
 
           <Chip
-            label={`Cantidad: ${inscrip.length}`}
+            label={`Cantidad: ${filteredRows.length}`}
             sx={{
               color: "#fff",
               fontWeight: 900,
@@ -325,22 +266,17 @@ const pagarCuota = async () => {
           sx={{ width: 120 }}
         />
 
-        {isNivel2 && (
-          <TextField
-            select
-            label="Estado cuota"
-            size="small"
-            value={filtroCuota}
-            onChange={(e) => setFiltroCuota(e.target.value)}
-            SelectProps={{ native: true }}
-            sx={{ width: 160 }}
-          >
-            <option value="todos">Todos</option>
-            <option value="aldia">Al día</option>
-            <option value="atrasado">Atrasados</option>
-            <option value="sinpago">Sin pagos</option>
-          </TextField>
-        )}
+        <TextField
+          select
+          label="Ver"
+          size="small"
+          value={soloUltimas ? "ultimas" : "todas"}
+          onChange={(e) => setSoloUltimas(e.target.value === "ultimas")}
+          sx={{ width: 170 }}
+        >
+          <MenuItem value="todas">Todas las cuotas</MenuItem>
+          <MenuItem value="ultimas">Solo últimas cuotas</MenuItem>
+        </TextField>
 
         <Button
           variant="contained"
@@ -348,28 +284,15 @@ const pagarCuota = async () => {
             height: 40,
             px: 2,
             borderRadius: "999px",
-            backgroundColor: "#2563EB",
+            backgroundColor: "#16a34a",
             textTransform: "none",
             fontWeight: 600
           }}
-          onClick={() => setMostrarTodos(true)}
+          onClick={descargarExcel}
         >
-          Ver todos
+          Descargar Excel
         </Button>
-<Button
-  variant="contained"
-  sx={{
-    height: 40,
-    px: 2,
-    borderRadius: "999px",
-    backgroundColor: "#16a34a",
-    textTransform: "none",
-    fontWeight: 600
-  }}
-  onClick={descargarExcel}
->
-  Descargar Excel
-</Button>
+
         <Button
           variant="contained"
           sx={{
@@ -391,370 +314,102 @@ const pagarCuota = async () => {
 
       <Paper>
 
-      {isMobile ? (
+        <TableContainer>
 
-<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Table>
 
-{paginatedRows.map((row) => (
+            <TableHead>
 
-<Paper
-key={row.id}
-sx={{
-p:2,
-borderRadius:3,
-display:"flex",
-flexDirection:"column",
-gap:1.5
-}}
->
+              <TableRow>
 
-<Box sx={{display:"flex", justifyContent:"space-between"}}>
+                <TableCell><b>ID</b></TableCell>
+                <TableCell><b>DNI</b></TableCell>
+                <TableCell><b>Apellido</b></TableCell>
+                <TableCell><b>Nombre</b></TableCell>
+                <TableCell><b>Disciplina</b></TableCell>
+                <TableCell><b>Cuota</b></TableCell>
+                <TableCell><b>Última</b></TableCell>
+                <TableCell><b>Acciones</b></TableCell>
 
-<Typography fontWeight={700}>
-{row.apellido} {row.nombre}
-</Typography>
+              </TableRow>
 
-<Typography fontSize={13} color="text.secondary">
-ID {row.id}
-</Typography>
+            </TableHead>
 
-</Box>
+            <TableBody>
 
-<Typography fontSize={14}>
-DNI: {row.dni}
-</Typography>
+              {filteredRows.map((row) => (
 
-<Typography fontSize={14}>
-{row.disciplina} {row.categoria ? `- ${row.categoria}` : ''}
-</Typography>
+                <TableRow key={row.cuota_id || `${row.id}-${row.mes}-${row.anio}`}>
 
-{isNivel2 && (
+                  <TableCell>{row.id}</TableCell>
+                  <TableCell>{row.dni}</TableCell>
+                  <TableCell>{row.apellido}</TableCell>
+                  <TableCell>{row.nombre}</TableCell>
 
-<Box>
+                  <TableCell>
+                    {row.disciplina} {row.categoria ? `- ${row.categoria}` : ''}
+                  </TableCell>
 
-{row.ultimaCuotaMes ? (
+              <TableCell>
 
-<Chip
-size="small"
-label={`${row.ultimaCuotaMes}/${row.ultimaCuotaAnio}`}
-color={
-estaAlDia(
-row.ultimaCuotaMes,
-row.ultimaCuotaAnio
-)
-? "success"
-: "warning"
-}
-/>
-
-) : (
-
-<Chip
-size="small"
-label="Sin pagos"
-color="error"
-/>
-
-)}
-
-</Box>
-
-)}
-
-<Box sx={{display:"flex", gap:1, mt:1}}>
-
-<Button
-size="small"
-variant="contained"
-color="success"
-onClick={() => abrirPago(row)}
->
-Pagar
-</Button>
-
-<Button
-size="small"
-variant="outlined"
-onClick={() =>
-navigate(`/usuario/socio/${row.id}`)
-}
->
-Ver
-</Button>
-
-</Box>
-
-</Paper>
-
-))}
-
-<TablePagination
-component="div"
-count={filteredRows.length}
-page={page}
-onPageChange={handleChangePage}
-rowsPerPage={rowsPerPage}
-onRowsPerPageChange={handleChangeRowsPerPage}
-rowsPerPageOptions={[10, 50, 100]}
-/>
-
-</Box>
-
-) : (
-
-<Paper>
-
-<TableContainer>
-
-<Table>
-
-<TableHead>
-
-<TableRow>
-
-<TableCell><b>ID</b></TableCell>
-<TableCell><b>DNI</b></TableCell>
-<TableCell><b>Apellido</b></TableCell>
-<TableCell><b>Nombre</b></TableCell>
-<TableCell><b>Disciplina</b></TableCell>
-
-{isNivel2 && (
-<TableCell><b>Última Cuota</b></TableCell>
-)}
-
-<TableCell><b>Acciones</b></TableCell>
-
-</TableRow>
-
-</TableHead>
-
-<TableBody>
-
-{paginatedRows.map((row) => (
-
-<TableRow key={row.id}>
-
-<TableCell>{row.id}</TableCell>
-<TableCell>{row.dni}</TableCell>
-<TableCell>{row.apellido}</TableCell>
-<TableCell>{row.nombre}</TableCell>
-
-<TableCell>
-{row.disciplina} {row.categoria ? `- ${row.categoria}` : ''}
-</TableCell>
-
-{isNivel2 && (
-
-<TableCell>
-
-{row.ultimaCuotaMes ? (
-
-<Chip
-size="small"
-label={`${row.ultimaCuotaMes}/${row.ultimaCuotaAnio}`}
-color={
-estaAlDia(
-row.ultimaCuotaMes,
-row.ultimaCuotaAnio
-)
-? "success"
-: "warning"
-}
-/>
-
-) : (
-
-<Chip
-size="small"
-label="Sin pagos"
-color="error"
-/>
-
-)}
+  {row.mes && row.anio ? (
+    `${row.mes}/${row.anio}`
+  ) : (
+    <Chip
+      label="Sin pagos"
+      size="small"
+      color="error"
+    />
+  )}
 
 </TableCell>
 
-)}
+                  <TableCell>
 
-<TableCell>
+                    <Chip
+                      label={row.es_ultima_cuota ? "SI" : "NO"}
+                      size="small"
+                      color={row.es_ultima_cuota ? "success" : "default"}
+                    />
 
-<Box sx={{display:"flex", gap:1}}>
+                  </TableCell>
 
-<Button
-size="small"
-variant="contained"
-color="success"
-onClick={() => abrirPago(row)}
->
-Pagar
-</Button>
+                  <TableCell>
 
-<Button
-size="small"
-onClick={() =>
-navigate(`/usuario/socio/${row.id}`)
-}
->
-Ver
-</Button>
+                    <Box sx={{ display: "flex", gap: 1 }}>
 
-</Box>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="success"
+                        onClick={() => abrirPago(row)}
+                      >
+                        Pagar
+                      </Button>
 
-</TableCell>
+                      <Button
+                        size="small"
+                        onClick={() =>
+                          navigate(`/usuario/socio/${row.id}`)
+                        }
+                      >
+                        Ver
+                      </Button>
 
-</TableRow>
+                    </Box>
 
-))}
+                  </TableCell>
 
-</TableBody>
+                </TableRow>
 
-</Table>
+              ))}
 
-</TableContainer>
+            </TableBody>
 
-<TablePagination
-component="div"
-count={filteredRows.length}
-page={page}
-onPageChange={handleChangePage}
-rowsPerPage={rowsPerPage}
-onRowsPerPageChange={handleChangeRowsPerPage}
-rowsPerPageOptions={[10, 50, 100]}
-/>
+          </Table>
 
-</Paper>
+        </TableContainer>
 
-)}
-
-        <TablePagination
-          component="div"
-          count={filteredRows.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[10, 50, 100]}
-        />
-<Dialog
-open={openPago}
-onClose={cerrarPago}
-maxWidth="sm"
-fullWidth
->
-
-<DialogTitle>
-
-Pagar cuota
-
-{socioSeleccionado && (
-  <Typography fontSize={14}>
-    {socioSeleccionado.apellido} {socioSeleccionado.nombre}
-  </Typography>
-)}
-
-</DialogTitle>
-
-<DialogContent>
-
-<Grid container spacing={2} mt={1}>
-
-<Grid item xs={6}>
-
-<TextField
-select
-fullWidth
-label="Mes"
-name="mes"
-value={formPago.mes}
-onChange={handleChangePago}
->
-
-{[
-"Enero","Febrero","Marzo","Abril","Mayo","Junio",
-"Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
-].map((mes,i)=>(
-<MenuItem key={i} value={i+1}>
-{mes}
-</MenuItem>
-))}
-
-</TextField>
-
-</Grid>
-
-
-<Grid item xs={6}>
-
-<TextField
-fullWidth
-label="Año"
-type="number"
-name="anio"
-value={formPago.anio}
-onChange={handleChangePago}
-/>
-
-</Grid>
-
-
-<Grid item xs={6}>
-
-<TextField
-type="date"
-fullWidth
-name="fecha_pago"
-label="Fecha pago"
-InputLabelProps={{ shrink:true }}
-value={formPago.fecha_pago}
-onChange={handleChangePago}
-/>
-
-</Grid>
-
-
-<Grid item xs={6}>
-
-<TextField
-select
-fullWidth
-label="Medio"
-name="medio"
-value={formPago.medio}
-onChange={handleChangePago}
->
-
-<MenuItem value="efectivo">Efectivo</MenuItem>
-<MenuItem value="transferencia">Transferencia</MenuItem>
-<MenuItem value="canje">Canje</MenuItem>
-
-</TextField>
-
-</Grid>
-
-</Grid>
-
-</DialogContent>
-
-
-<DialogActions>
-
-<Button onClick={cerrarPago}>
-Cancelar
-</Button>
-
-<Button
-variant="contained"
-color="success"
-onClick={pagarCuota}
->
-
-Guardar
-
-</Button>
-
-</DialogActions>
-
-</Dialog>
       </Paper>
 
     </>
