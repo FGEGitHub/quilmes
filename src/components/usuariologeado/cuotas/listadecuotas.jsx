@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import servicioFidei from '../../../services/socios';
-
+import * as XLSX from "xlsx";
 import {
   Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Paper, TablePagination,
@@ -77,7 +77,32 @@ const abrirPago = (socio) => {
   setSocioSeleccionado(socio);
   setOpenPago(true);
 };
+const descargarExcel = () => {
 
+  if (filteredRows.length === 0) {
+    alert("No hay datos para exportar");
+    return;
+  }
+
+  const datos = filteredRows.map((row) => ({
+    ID: row.id,
+    DNI: row.dni,
+    Apellido: row.apellido,
+    Nombre: row.nombre,
+    Disciplina: row.disciplina,
+    Categoria: row.categoria || "",
+    UltimaCuotaMes: row.ultimaCuotaMes || "",
+    UltimaCuotaAnio: row.ultimaCuotaAnio || ""
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(datos);
+  const workbook = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Socios");
+
+  XLSX.writeFile(workbook, "socios_filtrados.xlsx");
+
+};
 const cerrarPago = () => {
   setOpenPago(false);
   setSocioSeleccionado(null);
@@ -331,7 +356,20 @@ const pagarCuota = async () => {
         >
           Ver todos
         </Button>
-
+<Button
+  variant="contained"
+  sx={{
+    height: 40,
+    px: 2,
+    borderRadius: "999px",
+    backgroundColor: "#16a34a",
+    textTransform: "none",
+    fontWeight: 600
+  }}
+  onClick={descargarExcel}
+>
+  Descargar Excel
+</Button>
         <Button
           variant="contained"
           sx={{
