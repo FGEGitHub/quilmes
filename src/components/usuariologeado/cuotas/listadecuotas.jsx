@@ -121,6 +121,7 @@ export default function Ingresos() {
       Apellido: row.apellido,
       Nombre: row.nombre,
       Disciplina: row.disciplina,
+         Equipo: row.equipo,
       Categoria: row.categoria || "",
       Cuota: `${row.mes}/${row.anio}`,
       Ultima: row.es_ultima_cuota ? "SI" : "NO"
@@ -327,6 +328,7 @@ export default function Ingresos() {
                 <TableCell><b>Apellido</b></TableCell>
                 <TableCell><b>Nombre</b></TableCell>
                 <TableCell><b>Disciplina</b></TableCell>
+                   <TableCell><b>Equipo</b></TableCell>
                 <TableCell><b>Cuota</b></TableCell>
                 <TableCell><b>Última</b></TableCell>
                 <TableCell><b>Acciones</b></TableCell>
@@ -349,7 +351,7 @@ export default function Ingresos() {
                   <TableCell>
                     {row.disciplina} {row.categoria ? `- ${row.categoria}` : ''}
                   </TableCell>
-
+<TableCell>{row.equipo}</TableCell>
               <TableCell>
 
   {row.mes && row.anio ? (
