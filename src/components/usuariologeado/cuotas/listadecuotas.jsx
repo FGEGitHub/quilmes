@@ -411,7 +411,88 @@ export default function Ingresos() {
           </Table>
 
         </TableContainer>
+<Dialog open={openPago} onClose={cerrarPago} fullWidth maxWidth="sm">
+  <DialogTitle>
+    Registrar pago
+  </DialogTitle>
 
+  <DialogContent>
+
+    <Grid container spacing={2} mt={1}>
+
+      <Grid item xs={12} sm={6}>
+        <TextField
+          select
+          label="Mes"
+          name="mes"
+          value={formPago.mes}
+          onChange={handleChangePago}
+          fullWidth
+        >
+          {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => (
+            <MenuItem key={m} value={m}>{m}</MenuItem>
+          ))}
+        </TextField>
+      </Grid>
+
+      <Grid item xs={12} sm={6}>
+        <TextField
+          label="Año"
+          name="anio"
+          type="number"
+          value={formPago.anio}
+          onChange={handleChangePago}
+          fullWidth
+        />
+      </Grid>
+
+      <Grid item xs={12} sm={6}>
+        <TextField
+          label="Fecha de pago"
+          name="fecha_pago"
+          type="date"
+          value={formPago.fecha_pago}
+          onChange={handleChangePago}
+          InputLabelProps={{ shrink: true }}
+          fullWidth
+        />
+      </Grid>
+
+      <Grid item xs={12} sm={6}>
+        <TextField
+          select
+          label="Medio de pago"
+          name="medio"
+          value={formPago.medio}
+          onChange={handleChangePago}
+          fullWidth
+        >
+          <MenuItem value="efectivo">Efectivo</MenuItem>
+          <MenuItem value="transferencia">Transferencia</MenuItem>
+          <MenuItem value="tarjeta">Tarjeta</MenuItem>
+        </TextField>
+      </Grid>
+
+    </Grid>
+
+  </DialogContent>
+
+  <DialogActions>
+
+    <Button onClick={cerrarPago}>
+      Cancelar
+    </Button>
+
+    <Button
+      variant="contained"
+      color="success"
+      onClick={pagarCuota}
+    >
+      Confirmar pago
+    </Button>
+
+  </DialogActions>
+</Dialog>
       </Paper>
 
     </>
