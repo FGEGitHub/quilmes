@@ -43,7 +43,7 @@ const sectionBody = { p: 2 };
 const disciplinas = {
   Futbol: {
     Masculino: ["Primera", "Reserva"],
-    Femenino: ["Primera"],
+    Femenino: ["Primera", "Sub 16"],
     Infantil: ["Sub 9", "Sub 11", "Sub 13", "Sub 15", "Sub 17"]
   },
   Hockey: {
