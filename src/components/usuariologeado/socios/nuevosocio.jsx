@@ -36,7 +36,7 @@ const disciplinas = {
   Futbol: {
     Masculino: ["Primera", "Reserva"],
     Femenino: ["Primera"],
-    Infantil: ["Sub 9", "Sub 11", "Sub 13", "Sub 15", "Sub 17"]
+    Infantil: ["Sub 9", "Sub 11", "Sub 13", "Sub 15", "Sub 16", "Sub 17"]
   },
   Hockey: {
     Femenino: ["Damas", "Mamis"],
