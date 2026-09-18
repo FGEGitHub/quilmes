@@ -49,7 +49,7 @@ export default function Ingresos() {
   const [inscrip, setInscrip] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroCuota, setFiltroCuota] = useState("todos");
-const [mostrarTodos, setMostrarTodos] = useState(false);
+const [mostrarTodos, setMostrarTodos] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 

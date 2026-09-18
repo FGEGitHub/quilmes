@@ -76,6 +76,11 @@ const Navbar = () => {
               </Link>
             </li>
               <li>
+              <Link to="/usuario/cargaract" onClick={() => setIsOpen(false)}>
+                Carga Actividades
+              </Link>
+            </li>
+              <li>
               <button className="logout-btn" onClick={handleLogout}>
                 Cerrar sesión
               </button>
