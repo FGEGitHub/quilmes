@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-const API = "http://localhost:3000/api";
+import servicio from "../../../services/socios";
 
 const meses = [
   { value: "01", label: "Enero" },
@@ -17,22 +16,55 @@ const meses = [
   { value: "12", label: "Diciembre" },
 ];
 
-export default function RegistroGastos() {
+const actividadesMock = [
+  { id: 1, nombre: "Actividad 1", tipo_id: 1 },
+  { id: 2, nombre: "Actividad 2", tipo_id: 2 },
+  { id: 3, nombre: "Actividad 3", tipo_id: 1 },
+  { id: 4, nombre: "Actividad 4", tipo_id: 3 },
+];
 
+const tiposMock = [
+  { id: 1, nombre: "Tipo 1" },
+  { id: 2, nombre: "Tipo 2" },
+  { id: 3, nombre: "Tipo 3" },
+];
+
+const zonasMock = [
+  { id: 1, nombre: "Zona 1" },
+  { id: 2, nombre: "Zona 2" },
+  { id: 3, nombre: "Zona 3" },
+  { id: 4, nombre: "Zona 4" },
+];
+
+export default function RegistroGastos() {
   // =====================================================
   // USUARIO
   // =====================================================
+const [usuarioId, setUsuarioId] = useState("");
+const [nombreUsuario, setNombreUsuario] = useState("");
 
-  const [usuarioId, setUsuarioId] = useState(
-    localStorage.getItem("usuarioId") || ""
-  );
+useEffect(() => {
+  const loggedUserJSON = localStorage.getItem("loggedNoteAppUser");
 
-  const [nombreUsuario, setNombreUsuario] = useState(
-    localStorage.getItem("nombreUsuario") || ""
-  );
+  console.log("USER GUARDADO:", loggedUserJSON);
 
+  if (!loggedUserJSON) {
+    console.log("No existe 'user' en localStorage");
+    return;
+  }
+
+  try {
+    const user = JSON.parse(loggedUserJSON);
+
+    setUsuarioId(user.id || "");
+    setNombreUsuario(user.nombre || "");
+
+  } catch (error) {
+    console.error("Error leyendo usuario:", error);
+  }
+}, []);
   // =====================================================
-  // DATOS DE LOS DESPLEGABLES
+  // DATOS
   // =====================================================
 
   const [actividades, setActividades] = useState([]);
@@ -77,55 +109,25 @@ export default function RegistroGastos() {
 
   useEffect(() => {
     cargarDatos();
-  }, []);
 
-  const cargarDatos = async () => {
+    // Volvemos a leer usuarioId por si fue cargado
+    // después de montar el componente.
+    const id = localStorage.getItem("usuarioId");
+    const nombre = localStorage.getItem("nombreUsuario");
 
-    try {
-
-      const [
-        actividadesResponse,
-        tiposResponse,
-        zonasResponse
-      ] = await Promise.all([
-
-        fetch(`${API}/actividades`),
-        fetch(`${API}/tipos-actividad`),
-        fetch(`${API}/zonas`)
-
-      ]);
-
-      if (!actividadesResponse.ok) {
-        throw new Error("Error cargando actividades");
-      }
-
-      if (!tiposResponse.ok) {
-        throw new Error("Error cargando tipos");
-      }
-
-      if (!zonasResponse.ok) {
-        throw new Error("Error cargando zonas");
-      }
-
-      const actividadesData = await actividadesResponse.json();
-      const tiposData = await tiposResponse.json();
-      const zonasData = await zonasResponse.json();
-
-      setActividades(actividadesData);
-      setTipos(tiposData);
-      setZonas(zonasData);
-
-    } catch (error) {
-
-      console.error(error);
-
-      mostrarMensaje(
-        "No se pudieron cargar los datos.",
-        "error"
-      );
-
+    if (id) {
+      setUsuarioId(id);
     }
 
+    if (nombre) {
+      setNombreUsuario(nombre);
+    }
+  }, []);
+
+  const cargarDatos = () => {
+    setActividades(actividadesMock);
+    setTipos(tiposMock);
+    setZonas(zonasMock);
   };
 
   // =====================================================
@@ -133,7 +135,6 @@ export default function RegistroGastos() {
   // =====================================================
 
   const mostrarMensaje = (texto, tipo = "success") => {
-
     setMensaje(texto);
     setTipoMensaje(tipo);
 
@@ -141,7 +142,6 @@ export default function RegistroGastos() {
       setMensaje("");
       setTipoMensaje("");
     }, 3500);
-
   };
 
   // =====================================================
@@ -149,14 +149,12 @@ export default function RegistroGastos() {
   // =====================================================
 
   const handleChange = (e) => {
-
     const { name, value } = e.target;
 
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
-
   };
 
   // =====================================================
@@ -164,7 +162,6 @@ export default function RegistroGastos() {
   // =====================================================
 
   const cambiarActividad = (e) => {
-
     const actividadId = e.target.value;
 
     const actividad = actividades.find(
@@ -176,173 +173,105 @@ export default function RegistroGastos() {
       actividad_id: actividadId,
       tipo_id: actividad?.tipo_id || "",
     }));
-
   };
 
   // =====================================================
   // AGREGAR GASTO
   // =====================================================
 
-  const agregarGasto = async () => {
+const agregarGasto = async () => {
 
-    // IMPORTANTE:
-    // Sacamos nuevamente el usuarioId del localStorage
-    // justo antes de enviar.
+  if (!usuarioId) {
+    mostrarMensaje("No se encontró el usuario.", "error");
+    return;
+  }
 
-    const usuarioIdActual = localStorage.getItem("usuarioId");
+  if (!form.actividad_id) {
+    mostrarMensaje("Seleccioná una actividad.", "error");
+    return;
+  }
 
-    if (!usuarioIdActual) {
+  if (!form.tipo_id) {
+    mostrarMensaje("Seleccioná un tipo de actividad.", "error");
+    return;
+  }
 
-      mostrarMensaje(
-        "No se encontró el usuario. Volvé a iniciar sesión.",
-        "error"
-      );
+  if (!form.descripcion.trim()) {
+    mostrarMensaje("Ingresá una descripción.", "error");
+    return;
+  }
 
-      return;
-    }
+  if (!form.zona_id) {
+    mostrarMensaje("Seleccioná una zona.", "error");
+    return;
+  }
 
-    // Validaciones
+  if (!form.monto || Number(form.monto) <= 0) {
+    mostrarMensaje("Ingresá un monto válido.", "error");
+    return;
+  }
 
-    if (!form.actividad_id) {
-      mostrarMensaje(
-        "Seleccioná una actividad.",
-        "error"
-      );
-      return;
-    }
+  if (!form.fecha) {
+    mostrarMensaje("Seleccioná una fecha.", "error");
+    return;
+  }
 
-    if (!form.tipo_id) {
-      mostrarMensaje(
-        "Seleccioná un tipo de actividad.",
-        "error"
-      );
-      return;
-    }
+  try {
+    setCargando(true);
 
-    if (!form.descripcion.trim()) {
-      mostrarMensaje(
-        "Ingresá una descripción.",
-        "error"
-      );
-      return;
-    }
+    const datosGasto = {
+      usuario_id: Number(usuarioId),
+           actividad_id: Number(form.actividad_id),
+      tipo_id: Number(form.tipo_id),
+      zona_id: Number(form.zona_id),
+      descripcion: form.descripcion.trim(),
+      monto: Number(form.monto),
+      fecha: form.fecha,
+    };
 
-    if (!form.zona_id) {
-      mostrarMensaje(
-        "Seleccioná una zona.",
-        "error"
-      );
-      return;
-    }
+    console.log("GASTO A ENVIAR:", datosGasto);
 
-    if (!form.monto || Number(form.monto) <= 0) {
-      mostrarMensaje(
-        "Ingresá un monto válido.",
-        "error"
-      );
-      return;
-    }
+    const data = await servicio.enviagregastonuevo(datosGasto);
 
-    if (!form.fecha) {
-      mostrarMensaje(
-        "Seleccioná una fecha.",
-        "error"
-      );
-      return;
-    }
+    console.log("RESPUESTA:", data);
 
-    try {
+    mostrarMensaje(
+      "Gasto agregado correctamente.",
+      "success"
+    );
 
-      setCargando(true);
+    setForm({
+      actividad_id: "",
+      tipo_id: "",
+      descripcion: "",
+      zona_id: "",
+      monto: "",
+      fecha: "",
+    });
 
-      // =================================================
-      // ESTO ES LO QUE RECIBE EL BACKEND
-      // =================================================
+  } catch (error) {
+    console.error("ERROR:", error);
 
-      const datosGasto = {
+    mostrarMensaje(
+      error?.message || "No se pudo guardar el gasto.",
+      "error"
+    );
 
-        usuario_id: Number(usuarioIdActual),
-
-        actividad_id: Number(form.actividad_id),
-
-        zona_id: Number(form.zona_id),
-
-        descripcion: form.descripcion.trim(),
-
-        monto: Number(form.monto),
-
-        fecha: form.fecha,
-
-      };
-
-      console.log("Enviando gasto:", datosGasto);
-
-      const response = await fetch(`${API}/gastos`, {
-
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify(datosGasto),
-
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data?.error || "Error al guardar el gasto"
-        );
-      }
-
-      mostrarMensaje(
-        "Gasto agregado correctamente.",
-        "success"
-      );
-
-      // Limpiar formulario
-
-      setForm({
-        actividad_id: "",
-        tipo_id: "",
-        descripcion: "",
-        zona_id: "",
-        monto: "",
-        fecha: "",
-      });
-
-    } catch (error) {
-
-      console.error(error);
-
-      mostrarMensaje(
-        error.message || "No se pudo guardar el gasto.",
-        "error"
-      );
-
-    } finally {
-
-      setCargando(false);
-
-    }
-
-  };
-
+  } finally {
+    setCargando(false);
+  }
+};
   // =====================================================
   // FILTROS
   // =====================================================
 
   const cambiarFiltro = (e) => {
-
     const { name, value } = e.target;
 
     setFiltros((prev) => ({
       ...prev,
       [name]: value,
     }));
-
   };
 
   // =====================================================
@@ -350,9 +279,7 @@ export default function RegistroGastos() {
   // =====================================================
 
   return (
-
     <>
-
       <style>{`
 
         * {
@@ -367,10 +294,6 @@ export default function RegistroGastos() {
           font-family: Arial, Helvetica, sans-serif;
         }
 
-        /* ===============================
-           TITULO
-        =============================== */
-
         .titulo h1 {
           margin: 0;
           font-family: Georgia, serif;
@@ -384,9 +307,7 @@ export default function RegistroGastos() {
           color: #31506d;
         }
 
-        /* ===============================
-           USUARIO
-        =============================== */
+        /* USUARIO */
 
         .usuario-card {
           margin-top: 25px;
@@ -430,9 +351,7 @@ export default function RegistroGastos() {
           font-size: 15px;
         }
 
-        /* ===============================
-           CARD GASTO
-        =============================== */
+        /* CARD */
 
         .gasto-card {
           margin-top: 27px;
@@ -485,9 +404,7 @@ export default function RegistroGastos() {
           color: #7c8994;
         }
 
-        /* ===============================
-           BOTON AGREGAR
-        =============================== */
+        /* BOTON */
 
         .boton-container {
           display: flex;
@@ -497,10 +414,10 @@ export default function RegistroGastos() {
 
         .btn-agregar {
           height: 48px;
-          padding: 0 21px;
+          padding: 0 25px;
           border: none;
           border-radius: 8px;
-          background: #91b4af;
+          background: #31766b;
           color: white;
           font-size: 16px;
           font-weight: bold;
@@ -509,7 +426,7 @@ export default function RegistroGastos() {
         }
 
         .btn-agregar:hover {
-          background: #729e98;
+          background: #245b53;
         }
 
         .btn-agregar:disabled {
@@ -517,9 +434,7 @@ export default function RegistroGastos() {
           cursor: not-allowed;
         }
 
-        /* ===============================
-           FILTROS
-        =============================== */
+        /* FILTROS */
 
         .filtros {
           display: grid;
@@ -544,9 +459,7 @@ export default function RegistroGastos() {
           border-color: #31766b;
         }
 
-        /* ===============================
-           ACCIONES
-        =============================== */
+        /* ACCIONES */
 
         .acciones {
           display: flex;
@@ -575,9 +488,7 @@ export default function RegistroGastos() {
           opacity: .85;
         }
 
-        /* ===============================
-           MENSAJE
-        =============================== */
+        /* MENSAJE */
 
         .mensaje {
           margin-top: 18px;
@@ -600,9 +511,7 @@ export default function RegistroGastos() {
           background: #fff5f5;
         }
 
-        /* ===============================
-           MOBILE
-        =============================== */
+        /* MOBILE */
 
         @media (max-width: 768px) {
 
@@ -648,34 +557,23 @@ export default function RegistroGastos() {
           .btn-agregar {
             width: 100%;
           }
-
         }
 
       `}</style>
 
-
       <div className="gastos-container">
 
-        {/* =========================================
-            TITULO
-        ========================================= */}
+        {/* TITULO */}
 
         <div className="titulo">
-
-          <h1>
-            Registro de gastos
-          </h1>
+          <h1>Registro de gastos</h1>
 
           <p>
             Cargar gastos por actividad.
           </p>
-
         </div>
 
-
-        {/* =========================================
-            USUARIO
-        ========================================= */}
+        {/* USUARIO */}
 
         <div className="usuario-card">
 
@@ -689,32 +587,25 @@ export default function RegistroGastos() {
             placeholder="Ej: Juan Pérez"
             value={nombreUsuario}
             onChange={(e) => {
-
               setNombreUsuario(e.target.value);
 
               localStorage.setItem(
                 "nombreUsuario",
                 e.target.value
               );
-
             }}
           />
 
           <span className="usuario-info">
-
             {usuarioId
-              ? "Usuario identificado. Ya podés cargar gastos."
+              ? `Usuario identificado: ${usuarioId}`
               : "No se encontró usuarioId en localStorage."
             }
-
           </span>
 
         </div>
 
-
-        {/* =========================================
-            FORMULARIO
-        ========================================= */}
+        {/* FORMULARIO */}
 
         <div className="gasto-card">
 
@@ -740,20 +631,17 @@ export default function RegistroGastos() {
                 </option>
 
                 {actividades.map((actividad) => (
-
                   <option
                     key={actividad.id}
                     value={actividad.id}
                   >
                     {actividad.nombre}
                   </option>
-
                 ))}
 
               </select>
 
             </div>
-
 
             <div className="campo">
 
@@ -773,14 +661,12 @@ export default function RegistroGastos() {
                 </option>
 
                 {tipos.map((tipo) => (
-
                   <option
                     key={tipo.id}
                     value={tipo.id}
                   >
                     {tipo.nombre}
                   </option>
-
                 ))}
 
               </select>
@@ -788,7 +674,6 @@ export default function RegistroGastos() {
             </div>
 
           </div>
-
 
           {/* DESCRIPCION */}
 
@@ -808,7 +693,6 @@ export default function RegistroGastos() {
             />
 
           </div>
-
 
           {/* ZONA + MONTO + FECHA */}
 
@@ -832,20 +716,17 @@ export default function RegistroGastos() {
                 </option>
 
                 {zonas.map((zona) => (
-
                   <option
                     key={zona.id}
                     value={zona.id}
                   >
                     {zona.nombre}
                   </option>
-
                 ))}
 
               </select>
 
             </div>
-
 
             <div className="campo">
 
@@ -866,7 +747,6 @@ export default function RegistroGastos() {
 
             </div>
 
-
             <div className="campo">
 
               <label className="campo-label">
@@ -885,36 +765,43 @@ export default function RegistroGastos() {
 
           </div>
 
-
           {/* BOTON */}
 
           <div className="boton-container">
 
             <button
+              type="button"
               className="btn-agregar"
               onClick={agregarGasto}
-              disabled={cargando || !usuarioId}
+              disabled={cargando}
             >
-
               {cargando
                 ? "Guardando..."
                 : "Agregar gasto"
               }
-
             </button>
 
           </div>
 
         </div>
 
+        {/* MENSAJE */}
 
-        {/* =========================================
-            FILTROS
-        ========================================= */}
+        {mensaje && (
+          <div
+            className={`mensaje ${
+              tipoMensaje === "success"
+                ? "mensaje-success"
+                : "mensaje-error"
+            }`}
+          >
+            {mensaje}
+          </div>
+        )}
+
+        {/* FILTROS */}
 
         <div className="filtros">
-
-          {/* ACTIVIDAD */}
 
           <select
             className="filtro-select"
@@ -928,20 +815,15 @@ export default function RegistroGastos() {
             </option>
 
             {actividades.map((actividad) => (
-
               <option
                 key={actividad.id}
                 value={actividad.id}
               >
                 {actividad.nombre}
               </option>
-
             ))}
 
           </select>
-
-
-          {/* MES */}
 
           <select
             className="filtro-select"
@@ -955,20 +837,15 @@ export default function RegistroGastos() {
             </option>
 
             {meses.map((mes) => (
-
               <option
                 key={mes.value}
                 value={mes.value}
               >
                 {mes.label}
               </option>
-
             ))}
 
           </select>
-
-
-          {/* TIPO */}
 
           <select
             className="filtro-select"
@@ -982,20 +859,15 @@ export default function RegistroGastos() {
             </option>
 
             {tipos.map((tipo) => (
-
               <option
                 key={tipo.id}
                 value={tipo.id}
               >
                 {tipo.nombre}
               </option>
-
             ))}
 
           </select>
-
-
-          {/* ZONA */}
 
           <select
             className="filtro-select"
@@ -1009,62 +881,19 @@ export default function RegistroGastos() {
             </option>
 
             {zonas.map((zona) => (
-
               <option
                 key={zona.id}
                 value={zona.id}
               >
                 {zona.nombre}
               </option>
-
             ))}
 
           </select>
 
         </div>
 
-
-        {/* =========================================
-            ACCIONES
-        ========================================= */}
-
-        <div className="acciones">
-
-          <button className="btn-accion btn-rendicion">
-            Ver todo (rendición)
-          </button>
-
-          <button className="btn-accion">
-            Exportar Excel
-          </button>
-
-          <button className="btn-accion">
-            Exportar CSV
-          </button>
-
-        </div>
-
-
-        {/* =========================================
-            MENSAJE
-        ========================================= */}
-
-        {mensaje && (
-
-          <div
-            className={`mensaje ${
-              tipoMensaje === "error"
-                ? "mensaje-error"
-                : "mensaje-success"
-            }`}
-          >
-            {mensaje}
-          </div>
-
-        )}
-
       </div>
-
     </>
   );
 }

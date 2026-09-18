@@ -80,6 +80,11 @@ const Navbar = () => {
                 Carga Actividades
               </Link>
             </li>
+             <li>
+              <Link to="/usuario/cargaract" onClick={() => setIsOpen(false)}>
+                Dashboard Actividades
+              </Link>
+            </li>
               <li>
               <button className="logout-btn" onClick={handleLogout}>
                 Cerrar sesión
