@@ -81,7 +81,7 @@ const Navbar = () => {
               </Link>
             </li>
              <li>
-              <Link to="/usuario/cargaract" onClick={() => setIsOpen(false)}>
+              <Link to="/usuario/dashboard" onClick={() => setIsOpen(false)}>
                 Dashboard Actividades
               </Link>
             </li>

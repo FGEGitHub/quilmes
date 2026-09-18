@@ -211,4 +211,16 @@ const traeractividades = async () => {
 
 
 
-export default {traeractividades, enviagregastonuevo, eliminarsocio, traercuotastodas, traercuotas, pagarcuota, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}
+
+const traerGastos = async () => {
+
+  // const data = await axios.post('http://localhost:4000/signupp', datos)
+  const { data } = await axios.get(baseUrl + 'traerGastos/' ,config)
+  return data
+
+}
+
+
+
+
+export default {traerGastos, traeractividades, enviagregastonuevo, eliminarsocio, traercuotastodas, traercuotas, pagarcuota, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}

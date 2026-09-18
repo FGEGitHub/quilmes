@@ -8,6 +8,8 @@ import Nuevosocio from '../pages/usuariologin/nuevosocio';
 import Socioadmin from '../pages/usuariologin/socio';
 import Cuotasadmin from '../pages/usuariologin/cuotas';
 import Cargaractividades from '../pages/usuariologin/agregaract';
+import Dashboard from '../pages/usuariologin/dashboard1';
+
 import Login from '../pages/login';
 
 const Rutas = [
@@ -27,7 +29,7 @@ const Rutas = [
 { path: '/usuario/socio/:id', element: <Socioadmin /> },
 { path: '/usuario/cuotas', element: <Cuotasadmin /> },
 { path: '/usuario/cargaract', element: <Cargaractividades /> },
-
+{ path: '/usuario/dashboard', element: <Dashboard /> },
     ];
 
 
