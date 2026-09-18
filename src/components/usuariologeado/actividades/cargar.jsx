@@ -24,9 +24,9 @@ const actividadesMock = [
 ];
 
 const tiposMock = [
-  { id: 1, nombre: "Tipo 1" },
-  { id: 2, nombre: "Tipo 2" },
-  { id: 3, nombre: "Tipo 3" },
+  { id: 1, nombre: "Gasto" },
+  { id: 2, nombre: "Cobro" },
+  { id: 3, nombre: "Sin determinar" },
 ];
 
 const zonasMock = [
@@ -71,6 +71,7 @@ useEffect(() => {
   const [tipos, setTipos] = useState([]);
   const [zonas, setZonas] = useState([]);
 
+const [cargandoActividades, setCargandoActividades] = useState(false);
   // =====================================================
   // FORMULARIO
   // =====================================================
@@ -124,11 +125,31 @@ useEffect(() => {
     }
   }, []);
 
-  const cargarDatos = () => {
-    setActividades(actividadesMock);
+ const cargarDatos = async () => {
+  try {
+    setCargandoActividades(true);
+
+    const data = await servicio.traeractividades();
+
+    console.log("ACTIVIDADES:", data);
+
+    setActividades(data);
+
     setTipos(tiposMock);
     setZonas(zonasMock);
-  };
+
+  } catch (error) {
+    console.error("ERROR AL TRAER ACTIVIDADES:", error);
+
+    mostrarMensaje(
+      "No se pudieron cargar las actividades.",
+      "error"
+    );
+
+  } finally {
+    setCargandoActividades(false);
+  }
+};
 
   // =====================================================
   // MENSAJE
@@ -160,20 +181,19 @@ useEffect(() => {
   // =====================================================
   // CAMBIAR ACTIVIDAD
   // =====================================================
+const cambiarActividad = (e) => {
+  const actividadId = e.target.value;
 
-  const cambiarActividad = (e) => {
-    const actividadId = e.target.value;
+  const actividad = actividades.find(
+    (item) => String(item.id) === String(actividadId)
+  );
 
-    const actividad = actividades.find(
-      (item) => String(item.id) === String(actividadId)
-    );
-
-    setForm((prev) => ({
-      ...prev,
-      actividad_id: actividadId,
-      tipo_id: actividad?.tipo_id || "",
-    }));
-  };
+  setForm((prev) => ({
+    ...prev,
+    actividad_id: actividadId,
+    tipo_id: actividad?.tipo_id || "",
+  }));
+};
 
   // =====================================================
   // AGREGAR GASTO
@@ -618,28 +638,25 @@ const agregarGasto = async () => {
               <label className="campo-label">
                 NOMBRE DE LA ACTIVIDAD
               </label>
+<select
+  className="campo-select"
+  name="actividad_id"
+  value={form.actividad_id}
+  onChange={cambiarActividad}
+>
+  <option value="">
+    Elegir actividad
+  </option>
 
-              <select
-                className="campo-select"
-                name="actividad_id"
-                value={form.actividad_id}
-                onChange={cambiarActividad}
-              >
-
-                <option value="">
-                  Elegir actividad
-                </option>
-
-                {actividades.map((actividad) => (
-                  <option
-                    key={actividad.id}
-                    value={actividad.id}
-                  >
-                    {actividad.nombre}
-                  </option>
-                ))}
-
-              </select>
+  {actividades.map((actividad) => (
+    <option
+      key={actividad.id}
+      value={actividad.id}
+    >
+      {actividad.nombre}
+    </option>
+  ))}
+</select>
 
             </div>
 
