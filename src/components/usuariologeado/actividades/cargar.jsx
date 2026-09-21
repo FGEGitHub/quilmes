@@ -199,6 +199,7 @@ const cambiarActividad = (e) => {
   // AGREGAR GASTO
   // =====================================================
 
+
 const agregarGasto = async () => {
 
   if (!usuarioId) {
@@ -239,10 +240,18 @@ const agregarGasto = async () => {
   try {
     setCargando(true);
 
+    // Convertimos el ID al texto que queremos guardar
+    const tipoSeleccionado = tipos.find(
+      (tipo) => String(tipo.id) === String(form.tipo_id)
+    );
+
     const datosGasto = {
       usuario_id: Number(usuarioId),
-           actividad_id: Number(form.actividad_id),
-      tipo_id: Number(form.tipo_id),
+      actividad_id: Number(form.actividad_id),
+
+      // Guarda literalmente: "Gasto", "Cobro" o "Sin determinar"
+      tipo: tipoSeleccionado?.nombre || "",
+
       zona_id: Number(form.zona_id),
       descripcion: form.descripcion.trim(),
       monto: Number(form.monto),
@@ -281,6 +290,8 @@ const agregarGasto = async () => {
     setCargando(false);
   }
 };
+
+
   // =====================================================
   // FILTROS
   // =====================================================
