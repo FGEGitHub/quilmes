@@ -390,28 +390,45 @@ export default function DashboardGastos() {
   // KPIs
   // ---------------------------------------
 
-  const kpis = useMemo(() => {
+// ---------------------------------------
+// KPIs
+// ---------------------------------------
 
-    const total = filtrados.reduce(
-      (acc, g) =>
-        acc + Number(g.monto || 0),
-      0
-    );
+const kpis = useMemo(() => {
 
-    const cantidad = filtrados.length;
+  const gastos = filtrados.filter(
+    (g) =>
+      String(g.tipo || "").trim().toLowerCase() === "gasto"
+  );
 
-    const promedio =
-      cantidad > 0
-        ? total / cantidad
-        : 0;
+  const cobros = filtrados.filter(
+    (g) =>
+      String(g.tipo || "").trim().toLowerCase() === "cobro"
+  );
 
-    return {
-      total,
-      cantidad,
-      promedio,
-    };
+  const totalGastos = gastos.reduce(
+    (acc, g) => acc + Number(g.monto || 0),
+    0
+  );
 
-  }, [filtrados]);
+  const totalCobros = cobros.reduce(
+    (acc, g) => acc + Number(g.monto || 0),
+    0
+  );
+
+  const promedioGastos =
+    gastos.length > 0
+      ? totalGastos / gastos.length
+      : 0;
+
+  return {
+    totalGastos,
+    totalCobros,
+    cantidadGastos: gastos.length,
+    promedioGastos,
+  };
+
+}, [filtrados]);
 
 
   // ---------------------------------------
@@ -503,28 +520,31 @@ const gastosPorMes = useMemo(() => {
   // ---------------------------------------
   // GASTO DEL MES
   // ---------------------------------------
+// ---------------------------------------
+// GASTO DEL MES
+// ---------------------------------------
 
-  const gastoMes = useMemo(() => {
+const gastoMes = useMemo(() => {
 
-    const ahora = new Date();
+  const ahora = new Date();
 
-    const anioActual = ahora.getFullYear();
-    const mesActual = ahora.getMonth() + 1;
+  const anioActual = ahora.getFullYear();
+  const mesActual = ahora.getMonth() + 1;
 
-    return gastosConFecha
-      .filter(
-        (g) =>
-          g.__fecha?.anio === anioActual &&
-          g.__fecha?.mes === mesActual
-      )
-      .reduce(
-        (acc, g) =>
-          acc + Number(g.monto || 0),
-        0
-      );
+  return gastosConFecha
+    .filter(
+      (g) =>
+        g.__fecha?.anio === anioActual &&
+        g.__fecha?.mes === mesActual &&
+        String(g.tipo || "").trim().toLowerCase() === "gasto"
+    )
+    .reduce(
+      (acc, g) =>
+        acc + Number(g.monto || 0),
+      0
+    );
 
-  }, [gastosConFecha]);
-
+}, [gastosConFecha]);
 
   // ---------------------------------------
   // LIMPIAR
@@ -801,37 +821,37 @@ const gastosPorMes = useMemo(() => {
             }}
           >
 
-            <KpiCard
-              icon={<PaidIcon />}
-              color={COLOR_GREEN}
-              label="Total gastos"
-              value={formatoCompacto(kpis.total)}
-              sub={formatoNumero(kpis.total)}
-            />
+    <KpiCard
+  icon={<PaidIcon />}
+  color={COLOR_AMBER}
+  label="Total gastos"
+  value={formatoCompacto(kpis.totalGastos)}
+  sub={formatoNumero(kpis.totalGastos)}
+/>
 
-            <KpiCard
-              icon={<ReceiptLongIcon />}
-              color={COLOR_NAVY}
-              label="Cantidad"
-              value={kpis.cantidad}
-              sub="gastos registrados"
-            />
+<KpiCard
+  icon={<PaidIcon />}
+  color={COLOR_GREEN}
+  label="Total cobros"
+  value={formatoCompacto(kpis.totalCobros)}
+  sub={formatoNumero(kpis.totalCobros)}
+/>
 
-            <KpiCard
-              icon={<CalendarMonthIcon />}
-              color={COLOR_SKY}
-              label="Este mes"
-              value={formatoCompacto(gastoMes)}
-              sub={formatoNumero(gastoMes)}
-            />
+<KpiCard
+  icon={<CalendarMonthIcon />}
+  color={COLOR_SKY}
+  label="Este mes"
+  value={formatoCompacto(gastoMes)}
+  sub={formatoNumero(gastoMes)}
+/>
 
-            <KpiCard
-              icon={<TrendingUpIcon />}
-              color={COLOR_AMBER}
-              label="Promedio"
-              value={formatoCompacto(kpis.promedio)}
-              sub={formatoNumero(kpis.promedio)}
-            />
+<KpiCard
+  icon={<TrendingUpIcon />}
+  color={COLOR_NAVY}
+  label="Promedio gasto"
+  value={formatoCompacto(kpis.promedioGastos)}
+  sub={formatoNumero(kpis.promedioGastos)}
+/>
 
           </Box>
 
