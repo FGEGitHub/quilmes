@@ -418,42 +418,41 @@ export default function DashboardGastos() {
   // GASTOS POR MES
   // ---------------------------------------
 
-  const gastosPorMes = useMemo(() => {
+const gastosPorMes = useMemo(() => {
+  const grupos = new Map();
 
-    const grupos = new Map();
+  filtrados.forEach((g) => {
+    if (!g.__fecha) return;
 
-    filtrados.forEach((g) => {
+    const anio = g.__fecha.anio;
+    const mes = g.__fecha.mes;
 
-      if (!g.__fecha) return;
+    const key = `${anio}-${String(mes).padStart(2, "0")}`;
 
-      const key =
-        `${g.__fecha.anio}-${String(
-          g.__fecha.mes
-        ).padStart(2, "0")}`;
+    if (!grupos.has(key)) {
+      grupos.set(key, {
+        key,
+        label: `${MESES[mes - 1]} ${anio}`,
+        cobros: 0,
+        gastos: 0,
+      });
+    }
 
-      if (!grupos.has(key)) {
+    const monto = Number(g.monto || 0);
 
-        grupos.set(key, {
-          key,
-          label: `${MESES[g.__fecha.mes - 1]} ${String(
-            g.__fecha.anio
-          ).slice(-2)}`,
-          total: 0,
-        });
+    if (String(g.tipo).toLowerCase() === "cobro") {
+      grupos.get(key).cobros += monto;
+    }
 
-      }
+    if (String(g.tipo).toLowerCase() === "gasto") {
+      grupos.get(key).gastos += monto;
+    }
+  });
 
-      grupos.get(key).total +=
-        Number(g.monto || 0);
-
-    });
-
-    return [...grupos.values()]
-      .sort((a, b) =>
-        a.key.localeCompare(b.key)
-      );
-
-  }, [filtrados]);
+  return [...grupos.values()].sort((a, b) =>
+    a.key.localeCompare(b.key)
+  );
+}, [filtrados]);
 
 
   // ---------------------------------------
@@ -861,49 +860,60 @@ export default function DashboardGastos() {
               empty={gastosPorMes.length === 0}
             >
 
-              <LineChart
-                data={gastosPorMes}
-                margin={{
-                  top: 10,
-                  right: 20,
-                  left: 0,
-                  bottom: 5,
-                }}
-              >
+            <LineChart
+  data={gastosPorMes}
+  margin={{
+    top: 10,
+    right: 20,
+    left: 0,
+    bottom: 5,
+  }}
+>
+  <CartesianGrid
+    strokeDasharray="3 3"
+    vertical={false}
+    stroke="#eef2f5"
+  />
 
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  vertical={false}
-                  stroke="#eef2f5"
-                />
+  <XAxis
+    dataKey="label"
+    tick={{ fontSize: 12 }}
+  />
 
-                <XAxis
-                  dataKey="label"
-                  tick={{ fontSize: 12 }}
-                />
+  <YAxis
+    tickFormatter={formatoCompacto}
+    tick={{ fontSize: 11 }}
+  />
 
-                <YAxis
-                  tickFormatter={formatoCompacto}
-                  tick={{ fontSize: 11 }}
-                />
+  <Tooltip
+    formatter={(value, name) => [
+      formatoNumero(value),
+      name,
+    ]}
+  />
 
-                <Tooltip
-                  formatter={(value) =>
-                    formatoNumero(value)
-                  }
-                />
+  <Legend />
 
-                <Line
-                  type="monotone"
-                  dataKey="total"
-                  name="Gastos"
-                  stroke={COLOR_NAVY}
-                  strokeWidth={3}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
+  <Line
+    type="monotone"
+    dataKey="gastos"
+    name="Gastos"
+    stroke={COLOR_AMBER}
+    strokeWidth={3}
+    dot={{ r: 4 }}
+    activeDot={{ r: 6 }}
+  />
 
-              </LineChart>
+  <Line
+    type="monotone"
+    dataKey="cobros"
+    name="Cobros"
+    stroke={COLOR_GREEN}
+    strokeWidth={3}
+    dot={{ r: 4 }}
+    activeDot={{ r: 6 }}
+  />
+</LineChart>
 
             </ChartCard>
 
