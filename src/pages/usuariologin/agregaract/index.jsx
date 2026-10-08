@@ -4,7 +4,7 @@ import Nav from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import { Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-
+import Izq from "../../../components/usuariologeado/MenuClub";
 const HeroSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -13,8 +13,8 @@ const HeroSection = () => {
     <>
       <Nav />
       <Box sx={{ mt: isMobile ? 0 : "-1%" }}>
-        <br/> <br/> 
-        <Componente />
+        <br/>      <Izq>
+        <Componente /></Izq>
       </Box>
       <Footer />
     </>

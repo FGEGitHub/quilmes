@@ -9,7 +9,9 @@ import Socioadmin from '../pages/usuariologin/socio';
 import Cuotasadmin from '../pages/usuariologin/cuotas';
 import Cargaractividades from '../pages/usuariologin/agregaract';
 import Dashboard from '../pages/usuariologin/dashboard1';
+import Cobroslog from '../pages/usuariologin/cobros';
 
+import Iniciolog from '../pages/usuariologin/inicio';
 import Login from '../pages/login';
 
 const Rutas = [
@@ -30,6 +32,9 @@ const Rutas = [
 { path: '/usuario/cuotas', element: <Cuotasadmin /> },
 { path: '/usuario/cargaract', element: <Cargaractividades /> },
 { path: '/usuario/dashboard', element: <Dashboard /> },
+{ path: '/usuario/inicio', element: <Iniciolog /> },
+
+{ path: '/usuario/cobros', element: <Cobroslog /> },
     ];
 
 

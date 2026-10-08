@@ -1,10 +1,11 @@
 import React from "react";
-import Componente from "../../../components/usuariologeado/cuotas/listadecuotas";
+import Componente from "../../../components/usuariologeado/cobros/componente";
 import Nav from "../../../components/Navbar";
+import Izq from "../../../components/usuariologeado/MenuClub";
 import Footer from "../../../components/Footer";
 import { Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Izq from "../../../components/usuariologeado/MenuClub";
+
 const HeroSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -12,11 +13,10 @@ const HeroSection = () => {
   return (
     <>
       <Nav />
-      <Box sx={{ mt: isMobile ? 0 : "-1%" }}>
-        <br/> 
-        
-         <Izq>
-        <Componente /></Izq>
+      <Box sx={{ mt: isMobile ? 0 : "1%" }}>
+        <Izq>
+          <Componente />
+        </Izq>
       </Box>
       <Footer />
     </>

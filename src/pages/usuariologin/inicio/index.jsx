@@ -1,5 +1,5 @@
 import React from "react";
-import Componente from "../../../components/usuariologeado/cuotas/listadecuotas";
+import Componente from "../../../components/usuariologeado/inicio/componente";
 import Nav from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import { Box, useMediaQuery } from "@mui/material";
@@ -12,10 +12,8 @@ const HeroSection = () => {
   return (
     <>
       <Nav />
-      <Box sx={{ mt: isMobile ? 0 : "-1%" }}>
-        <br/> 
-        
-         <Izq>
+      <Box sx={{ mt: isMobile ? 0 : "1%" }}>
+          <Izq>
         <Componente /></Izq>
       </Box>
       <Footer />
