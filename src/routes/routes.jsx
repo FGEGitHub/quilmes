@@ -10,7 +10,9 @@ import Cuotasadmin from '../pages/usuariologin/cuotas';
 import Cargaractividades from '../pages/usuariologin/agregaract';
 import Dashboard from '../pages/usuariologin/dashboard1';
 import Cobroslog from '../pages/usuariologin/cobros';
-
+import Indumentarialog from '../pages/usuariologin/indumentaria';
+import Cajalog from '../pages/usuariologin/caja';
+import Partidoslog from '../pages/usuariologin/partidos';
 import Iniciolog from '../pages/usuariologin/inicio';
 import Login from '../pages/login';
 
@@ -33,7 +35,9 @@ const Rutas = [
 { path: '/usuario/cargaract', element: <Cargaractividades /> },
 { path: '/usuario/dashboard', element: <Dashboard /> },
 { path: '/usuario/inicio', element: <Iniciolog /> },
-
+{ path: '/usuario/indumentaria', element: <Indumentarialog /> },
+{ path: '/usuario/caja', element: <Cajalog /> },
+{ path: '/usuario/partidos', element: <Partidoslog /> },
 { path: '/usuario/cobros', element: <Cobroslog /> },
     ];
 
