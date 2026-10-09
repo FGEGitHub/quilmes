@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Grid,
@@ -9,15 +9,122 @@ import {
   MenuItem,
   FormControl,
   LinearProgress,
+  Alert,
 } from "@mui/material";
+import { traerdatosinicio } from "../../../services/socios";
+
+const meses = [
+  { valor: 1, nombre: "Enero" },
+  { valor: 2, nombre: "Febrero" },
+  { valor: 3, nombre: "Marzo" },
+  { valor: 4, nombre: "Abril" },
+  { valor: 5, nombre: "Mayo" },
+  { valor: 6, nombre: "Junio" },
+  { valor: 7, nombre: "Julio" },
+  { valor: 8, nombre: "Agosto" },
+  { valor: 9, nombre: "Septiembre" },
+  { valor: 10, nombre: "Octubre" },
+  { valor: 11, nombre: "Noviembre" },
+  { valor: 12, nombre: "Diciembre" },
+];
+
+const formatoNumero = (valor) =>
+  new Intl.NumberFormat("es-AR").format(Number(valor) || 0);
+
+const formatoPesos = (valor) =>
+  new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    maximumFractionDigits: 2,
+  }).format(Number(valor) || 0);
 
 const Inicio = () => {
+  const hoy = new Date();
+
+  const [mes, setMes] = useState(hoy.getMonth() + 1);
+  const [anio, setAnio] = useState(hoy.getFullYear());
+
+  const [datos, setDatos] = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState("");
+
+  // Recuperar el usuario que inició sesión.
+  const loggedUserJSON = window.localStorage.getItem(
+    "loggedNoteAppUser"
+  );
+
+  let userContext = null;
+
+  if (loggedUserJSON) {
+    try {
+
+      userContext = JSON.parse(loggedUserJSON);
+    } catch (err) {
+      console.error("Error al leer el usuario:", err);
+    }
+  }
+
+  const idUsuario = userContext?.id;
+
+  const nombreUsuario = datos?.nombreUsuario || "Usuario";
+
+  useEffect(() => {
+    let activo = true;
+
+    const cargarDatos = async () => {
+    
+      if (!idUsuario) {
+        setDatos(null);
+        setError("No se encontró el ID del usuario en la sesión.");
+        setCargando(false);
+        return;
+      }
+
+      try {
+        setCargando(true);
+        setError("");
+
+        const respuesta = await traerdatosinicio({
+          id: idUsuario,
+          mes,
+          anio,
+        });
+  
+        if (activo) {
+          setDatos(respuesta);
+        }
+      } catch (err) {
+        console.error("Error al cargar el inicio:", err);
+
+        if (activo) {
+          setError(
+            err.response?.data?.error ||
+              "No se pudieron cargar los datos del club."
+          );
+        }
+      } finally {
+        if (activo) {
+          setCargando(false);
+        }
+      }
+    };
+
+    cargarDatos();
+
+    return () => {
+      activo = false;
+    };
+  }, [idUsuario, mes, anio]);
+
+  const porcentajeCuotas =
+    datos?.cuotasCobradas > 0 ? 100 : 0;
+
   return (
     <Box
       sx={{
         backgroundColor: "#f6f8fc",
         minHeight: "100vh",
-        padding: { xs: 2, md: 3.5 },
+        p: { xs: 2, md: 3.5 },
         color: "#172033",
       }}
     >
@@ -45,76 +152,82 @@ const Inicio = () => {
             Club Atlético Quilmes
           </Typography>
 
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 800,
-              mt: 0.5,
-            }}
-          >
-            Hola, Rocío
+          <Typography variant="h4" sx={{ fontWeight: 800, mt: 0.5 }}>
+            Hola, {nombreUsuario}
           </Typography>
 
-          <Typography
-            sx={{
-              color: "#6d778a",
-              mt: 0.5,
-            }}
-          >
+          <Typography sx={{ color: "#6d778a", mt: 0.5 }}>
             Así viene la administración del club.
           </Typography>
         </Box>
 
         {/* FILTROS */}
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-          }}
-        >
+        <Box sx={{ display: "flex", gap: 1 }}>
           <FormControl size="small">
             <Select
-              defaultValue="Octubre"
+              value={mes}
+              onChange={(e) => setMes(Number(e.target.value))}
               sx={{
                 backgroundColor: "#fff",
                 borderRadius: "11px",
-                minWidth: 130,
+                minWidth: 140,
               }}
             >
-              <MenuItem value="Octubre">Octubre</MenuItem>
-              <MenuItem value="Septiembre">Septiembre</MenuItem>
+              {meses.map((item) => (
+                <MenuItem key={item.valor} value={item.valor}>
+                  {item.nombre}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
           <FormControl size="small">
             <Select
-              defaultValue="2026"
+              value={anio}
+              onChange={(e) => setAnio(Number(e.target.value))}
               sx={{
                 backgroundColor: "#fff",
                 borderRadius: "11px",
                 minWidth: 100,
               }}
             >
-              <MenuItem value="2026">2026</MenuItem>
-              <MenuItem value="2025">2025</MenuItem>
+              {[hoy.getFullYear(), hoy.getFullYear() - 1,
+                hoy.getFullYear() - 2].map((valor) => (
+                <MenuItem key={valor} value={valor}>
+                  {valor}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
       </Box>
 
-      {/* METRICAS */}
+      {cargando && (
+        <Box sx={{ mb: 2 }}>
+          <LinearProgress />
+          <Typography sx={{ mt: 1, color: "#6d778a", fontSize: 13 }}>
+            Actualizando datos...
+          </Typography>
+        </Box>
+      )}
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+
+      {/* MÉTRICAS PRINCIPALES */}
       <Grid container spacing={1.75}>
-        <Grid item xs={12} sm={6} md={3}>
+       <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card sx={cardStyle}>
             <CardContent>
               <Typography sx={labelStyle}>
                 Jugadores activos
               </Typography>
-
               <Typography sx={valueStyle}>
-                186
+                {formatoNumero(datos?.jugadoresActivos)}
               </Typography>
-
               <Typography sx={labelStyle}>
                 Todas las categorías
               </Typography>
@@ -122,294 +235,130 @@ const Inicio = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+   <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card sx={cardStyle}>
             <CardContent>
               <Typography sx={labelStyle}>
-                Cuotas deportivas
+                Cuotas registradas
               </Typography>
-
               <Typography sx={valueStyle}>
-                124 / 173
+                {formatoNumero(datos?.cuotasCobradas)}
               </Typography>
-
               <Typography sx={labelStyle}>
-                71,7% cobradas
+                Cuotas del período seleccionado
               </Typography>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card sx={cardStyle}>
             <CardContent>
               <Typography sx={labelStyle}>
-                Cobrado este mes
+                Cobrado en cuotas
               </Typography>
-
-              <Typography sx={valueStyle}>
-                $3,25 M
+              <Typography sx={{ ...valueStyle, fontSize: 23 }}>
+                {formatoPesos(datos?.cobradoCuotas)}
               </Typography>
-
               <Typography sx={labelStyle}>
-                Ingresos registrados
+                {meses[mes - 1].nombre} de {anio}
               </Typography>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
+       <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card sx={cardStyle}>
             <CardContent>
               <Typography sx={labelStyle}>
-                Pendiente de cobro
+                Cobrado de sponsors
               </Typography>
-
-              <Typography sx={valueStyle}>
-                $1,35 M
+              <Typography sx={{ ...valueStyle, fontSize: 23 }}>
+                {formatoPesos(datos?.cobradoSponsors)}
               </Typography>
-
               <Typography sx={labelStyle}>
-                Sobre $4,60 M previstos
+                {meses[mes - 1].nombre} de {anio}
               </Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
 
-      {/* LO MAS IMPORTANTE */}
+      {/* INFORMACIÓN DISPONIBLE */}
       <Typography sx={sectionTitle}>
-        Lo más importante
-      </Typography>
-
-      <Grid container spacing={1.25}>
-        <Grid item xs={12} md={6}>
-          <AlertCard
-            title="49 jugadores"
-            text="todavía tienen pendiente octubre."
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <AlertCard
-            title="Sponsors: 5 de 10"
-            text="$750.000 cobrados de $1.500.000."
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <AlertCard
-            title="$185.000 en indumentaria"
-            text="todavía pendientes de cobro."
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <AlertCard
-            title="Sub 13: 92%"
-            text="categoría con mejor cumplimiento."
-          />
-        </Grid>
-      </Grid>
-
-      {/* RESUMEN ECONOMICO */}
-      <Typography sx={sectionTitle}>
-        Resumen económico
+        Resumen del período
       </Typography>
 
       <Grid container spacing={1.75}>
-        {/* COBROS */}
         <Grid item xs={12} md={6}>
           <Card sx={cardStyle}>
             <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  mb: 1,
-                }}
-              >
-                <Typography fontWeight={800}>
-                  Qué tenemos que cobrar
-                </Typography>
+              <Typography fontWeight={800} sx={{ mb: 1 }}>
+                Cuotas deportivas
+              </Typography>
 
-                <Typography fontWeight={800}>
-                  $4,60 M
-                </Typography>
-              </Box>
+              <Typography sx={{ fontSize: 28, fontWeight: 900 }}>
+                {formatoPesos(datos?.cobradoCuotas)}
+              </Typography>
 
-              <LinearProgress
-                variant="determinate"
-                value={71}
-                sx={{
-                  height: 9,
-                  borderRadius: 20,
-                  backgroundColor: "#edf0f5",
-                  "& .MuiLinearProgress-bar": {
-                    backgroundColor: "#1849a9",
-                    borderRadius: 20,
-                  },
-                }}
-              />
-
-              <Typography sx={{ ...labelStyle, mt: 1 }}>
-                71% cobrado · $3,25 M ingresados
+              <Typography sx={labelStyle}>
+                Total registrado en cuotas para {meses[mes - 1].nombre} de {anio}.
               </Typography>
 
               <EconomicRow
-                title="Cuotas deportivas"
-                value="$1.860.000"
-              />
-
-              <EconomicRow
-                title="Sponsors"
-                value="$750.000"
-              />
-
-              <EconomicRow
-                title="Indumentaria"
-                value="$455.000"
+                title="Cantidad de cuotas"
+                value={formatoNumero(datos?.cuotasCobradas)}
               />
             </CardContent>
           </Card>
         </Grid>
 
-        {/* CAJA */}
         <Grid item xs={12} md={6}>
           <Card sx={cardStyle}>
             <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography fontWeight={800}>
-                  Caja del mes
-                </Typography>
-
-                <Typography
-                  fontWeight={900}
-                  sx={{ color: "#178a52" }}
-                >
-                  +$1,38 M
-                </Typography>
-              </Box>
-
-              <Grid
-                container
-                spacing={2}
-                sx={{ mt: 1 }}
-              >
-                <Grid item xs={6}>
-                  <Typography sx={labelStyle}>
-                    Ingresos
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      fontSize: 23,
-                      fontWeight: 800,
-                    }}
-                  >
-                    $3,25 M
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={6}>
-                  <Typography sx={labelStyle}>
-                    Egresos
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      fontSize: 23,
-                      fontWeight: 800,
-                    }}
-                  >
-                    $1,87 M
-                  </Typography>
-                </Grid>
-              </Grid>
+              <Typography fontWeight={800} sx={{ mb: 1 }}>
+                Ingresos de sponsors
+              </Typography>
 
               <Typography
                 sx={{
-                  fontSize: 12,
-                  color: "#6d778a",
-                  mt: 2,
+                  fontSize: 28,
+                  fontWeight: 900,
+                  color: "#178a52",
                 }}
               >
-                Los cobros y gastos registrados alimentan
-                la caja automáticamente.
+                {formatoPesos(datos?.cobradoSponsors)}
               </Typography>
+
+              <Typography sx={labelStyle}>
+                Movimientos con tipo "Cobro de sponsor" en el período.
+              </Typography>
+
+    <EconomicRow
+  title="Mes consultado"
+  value={`${meses[mes - 1].nombre} ${anio}`}
+/>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
+
+      {!cargando && !error && datos && (
+        <Typography
+          sx={{
+            mt: 3,
+            color: "#6d778a",
+            fontSize: 12,
+          }}
+        >
+          Datos actualizados para {meses[mes - 1].nombre} de {anio}.
+        </Typography>
+      )}
     </Box>
   );
 };
 
-
-/* =========================
-   COMPONENTES AUXILIARES
-========================= */
-
-const AlertCard = ({ title, text }) => {
-  return (
-    <Box
-      sx={{
-        backgroundColor: "#fff",
-        border: "1px solid #e3e8f1",
-        borderLeft: "4px solid #1849a9",
-        borderRadius: "13px",
-        padding: 1.75,
-      }}
-    >
-      <Typography fontWeight={800}>
-        {title}
-      </Typography>
-
-      <Typography
-        sx={{
-          fontSize: 13,
-          color: "#6d778a",
-          mt: 0.3,
-        }}
-      >
-        {text}
-      </Typography>
-    </Box>
-  );
-};
-
-
-const EconomicRow = ({ title, value }) => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "12px 0",
-        borderBottom: "1px solid #e3e8f1",
-      }}
-    >
-      <Typography>
-        {title}
-      </Typography>
-
-      <Typography fontWeight={800}>
-        {value}
-      </Typography>
-    </Box>
-  );
-};
-
-
-/* =========================
-   ESTILOS
-========================= */
+/* ESTILOS */
 
 const cardStyle = {
   backgroundColor: "#fff",
@@ -426,7 +375,7 @@ const labelStyle = {
 const valueStyle = {
   fontSize: 27,
   fontWeight: 900,
-  margin: "4px 0",
+  my: 0.5,
 };
 
 const sectionTitle = {
@@ -435,5 +384,21 @@ const sectionTitle = {
   mt: 3.2,
   mb: 1.5,
 };
+
+const EconomicRow = ({ title, value }) => (
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      py: 1.5,
+      gap: 2,
+      borderBottom: "1px solid #e3e8f1",
+    }}
+  >
+    <Typography>{title}</Typography>
+    <Typography fontWeight={800}>{value}</Typography>
+  </Box>
+);
 
 export default Inicio;

@@ -221,6 +221,12 @@ const traerGastos = async () => {
 }
 
 
+export const traerdatosinicio = async ({ id, mes, anio }) => {
+  const response = await axios.get(baseUrl +"/traerdatosinicio", {
+    params: { id, mes, anio },
+  });
 
+  return response.data;
+};
 
-export default {traerGastos, traeractividades, enviagregastonuevo, eliminarsocio, traercuotastodas, traercuotas, pagarcuota, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}
+export default {traerGastos, traerdatosinicio, traeractividades, enviagregastonuevo, eliminarsocio, traercuotastodas, traercuotas, pagarcuota, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}

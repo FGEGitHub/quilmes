@@ -18,6 +18,13 @@ const MenuClub = ({ children }) => {
       icono: "⌂",
       path: "/usuario/inicio",
     },
+    
+       {
+      id: "cargaractividad",
+      nombre: "cargar actividad",
+      icono: "⚽",
+      path: "/usuario/cargaract",
+    },
     {
       id: "jugadores",
       nombre: "Jugadores",
