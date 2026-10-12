@@ -726,35 +726,7 @@ const agregarGasto = async () => {
 
           <div className="fila-tres">
 
-            <div className="campo">
-
-              <label className="campo-label">
-                ZONA
-              </label>
-
-              <select
-                className="campo-select"
-                name="zona_id"
-                value={form.zona_id}
-                onChange={handleChange}
-              >
-
-                <option value="">
-                  Elegir zona
-                </option>
-
-                {zonas.map((zona) => (
-                  <option
-                    key={zona.id}
-                    value={zona.id}
-                  >
-                    {zona.nombre}
-                  </option>
-                ))}
-
-              </select>
-
-            </div>
+          
 
             <div className="campo">
 

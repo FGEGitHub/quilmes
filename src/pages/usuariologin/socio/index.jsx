@@ -4,6 +4,7 @@ import Nav from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import { Box, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import Izq from "../../../components/usuariologeado/MenuClub";
 
 const HeroSection = () => {
   const theme = useTheme();

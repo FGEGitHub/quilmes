@@ -302,6 +302,20 @@ const aniosDisponibles =
                 <MenuItem value="canje">Canje</MenuItem>
               </TextField>
             </Grid>
+<Grid item xs={12} sm={6}>
+
+<Grid item xs={12} sm={6}>
+  <TextField
+    label="Monto"
+    name="monto"
+    type="number"
+    fullWidth
+    size="small"
+    value={formPago.monto}
+    onChange={handleChange}
+  />
+</Grid>
+            </Grid>
           </Grid>
         </DialogContent>
 
