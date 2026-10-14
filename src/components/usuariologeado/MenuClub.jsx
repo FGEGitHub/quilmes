@@ -18,8 +18,13 @@ const MenuClub = ({ children }) => {
       icono: "⌂",
       path: "/usuario/inicio",
     },
-    
-       {
+    {
+      id: "actividadesparametros",
+      nombre: "Actividades Parametros",
+      icono: "⚙️",
+      path: "/usuario/actividadesparametros",
+    },
+    {
       id: "cargaractividad",
       nombre: "cargar actividad",
       icono: "⚽",

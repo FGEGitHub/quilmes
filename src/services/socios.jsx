@@ -229,4 +229,17 @@ export const traerdatosinicio = async ({ id, mes, anio }) => {
   return response.data;
 };
 
-export default {traerGastos, traerdatosinicio, traeractividades, enviagregastonuevo, eliminarsocio, traercuotastodas, traercuotas, pagarcuota, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}
+
+const agregaractividad = async (datos) => {
+  const { data } = await axios.post(
+    baseUrl + "agregaractividad",
+    datos
+  );
+
+  return data;
+};
+
+
+
+
+export default {agregaractividad, traerGastos, traerdatosinicio, traeractividades, enviagregastonuevo, eliminarsocio, traercuotastodas, traercuotas, pagarcuota, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}
