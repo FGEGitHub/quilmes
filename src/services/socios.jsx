@@ -240,6 +240,112 @@ const agregaractividad = async (datos) => {
 };
 
 
+// ===============================
+// PARTIDOS QUILMES
+// ===============================
+
+// Listar partidos
+export const quilmesListarPartidos = async (params = {}) => {
+  const { data } = await axios.get(
+    baseUrl + "PARTIDOS/quilmes_listar_partidos",
+    { params }
+  );
+  return data;
+};
+
+// Obtener resumen económico
+export const quilmesResumenPartidos = async (params = {}) => {
+  const { data } = await axios.get(
+    baseUrl + "PARTIDOS/quilmes_resumen_partidos",
+    { params }
+  );
+  return data;
+};
+
+// Obtener un partido con sus movimientos
+export const quilmesObtenerPartido = async (id) => {
+  const { data } = await axios.get(
+    baseUrl + `PARTIDOS/quilmes_obtener_partido/${id}`
+  );
+  return data;
+};
+
+// Listar categorías
+export const quilmesListarCategorias = async () => {
+  const { data } = await axios.get(
+    baseUrl + "PARTIDOS/quilmes_listar_categorias"
+  );
+  return data;
+};
+
+// Crear partido
+export const quilmesCrearPartido = async (datos) => {
+  const { data } = await axios.post(
+    baseUrl + "PARTIDOS/quilmes_crear_partido",
+    datos
+  );
+  return data;
+};
+
+// Editar partido
+export const quilmesEditarPartido = async (id, datos) => {
+  const { data } = await axios.put(
+    baseUrl + `PARTIDOS/quilmes_editar_partido/${id}`,
+    datos
+  );
+  return data;
+};
+
+// Agregar ingreso o gasto
+export const quilmesAgregarMovimiento = async (id, datos) => {
+  const { data } = await axios.post(
+    baseUrl + `PARTIDOS/quilmes_agregar_movimiento/${id}`,
+    datos
+  );
+  return data;
+};
+
+// Eliminar partido
+export const quilmesEliminarPartido = async (id) => {
+  const { data } = await axios.delete(
+    baseUrl + `PARTIDOS/quilmes_eliminar_partido/${id}`
+  );
+  return data;
+};
 
 
-export default {agregaractividad, traerGastos, traerdatosinicio, traeractividades, enviagregastonuevo, eliminarsocio, traercuotastodas, traercuotas, pagarcuota, traerTurnosDisponibles, agendarapaciente, guardarConsulta, nuevoturnodisp, traerTurnoDetalle, modificarusuario,traerturnos, actualizarsocio, crearturno, traersocios , agregarsocio , traersocio, borrarpaciente}
+
+export default {
+  agregaractividad,
+  traerGastos,
+  traerdatosinicio,
+  traeractividades,
+  enviagregastonuevo,
+  eliminarsocio,
+  traercuotastodas,
+  traercuotas,
+  pagarcuota,
+  traerTurnosDisponibles,
+  agendarapaciente,
+  guardarConsulta,
+  nuevoturnodisp,
+  traerTurnoDetalle,
+  modificarusuario,
+  traerturnos,
+  actualizarsocio,
+  crearturno,
+  traersocios,
+  agregarsocio,
+  traersocio,
+  borrarpaciente,
+
+  // Partidos Quilmes
+  quilmesListarPartidos,
+  quilmesResumenPartidos,
+  quilmesObtenerPartido,
+  quilmesListarCategorias,
+  quilmesCrearPartido,
+  quilmesEditarPartido,
+  quilmesAgregarMovimiento,
+  quilmesEliminarPartido,
+};
