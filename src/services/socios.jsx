@@ -315,7 +315,27 @@ export const quilmesEliminarPartido = async (id) => {
 
 
 
+export const quilmesResumenCaja = async () => {
+  const { data } = await axios.get(
+    `${baseUrl}/CAJA/quilmes_resumen_caja`
+  );
+  return data;
+};
+
+export const quilmesListarMovimientosCaja = async () => {
+  const { data } = await axios.get(
+    `${baseUrl}/CAJA/quilmes_listar_movimientos`
+  );
+  return data;
+};
+
+
+
+
+
 export default {
+  quilmesResumenCaja,
+  quilmesListarMovimientosCaja,
   agregaractividad,
   traerGastos,
   traerdatosinicio,
