@@ -35,7 +35,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import StadiumIcon from "@mui/icons-material/Stadium";
 
 import { useNavigate, useLocation } from "react-router-dom";
-import Navbar from "..Navbar";
+import Navbar from "../Navbar";
 
 // Contexto para compartir el tema con el Navbar
 export const PanelThemeContext = createContext(null);
