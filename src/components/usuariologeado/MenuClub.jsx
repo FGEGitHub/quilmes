@@ -132,7 +132,7 @@ const MenuClub = ({ children }) => {
       id: "jugadores",
       nombre: "Jugadores",
       icono: <SportsSoccerIcon />,
-      path: "/usuario/socios",
+      path: "/usuario/jugadores",
     },
     {
       id: "socios",

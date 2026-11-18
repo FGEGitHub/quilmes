@@ -1,5 +1,5 @@
 import React from "react";
-import Componente from "../../../components/usuariologeado/socios/nuevosocio";
+import Componente from "../../../components/usuariologeado/jugadores/nuevosocio";
 import Nav from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import { Box, useMediaQuery } from "@mui/material";

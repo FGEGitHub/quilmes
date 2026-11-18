@@ -3,6 +3,7 @@ import Inicio from '../pages/inicio/index';
 import Principal from '../pages/principal/index';
 import Calendario from '../pages/calendario/index';
 import FutbolM from '../pages/futbol-masculino/index';
+import Jugadores from '../pages/usuariologin/jugadores';
 import Socios from '../pages/usuariologin/socios';
 import Nuevosocio from '../pages/usuariologin/nuevosocio';
 import Socioadmin from '../pages/usuariologin/socio';
@@ -28,6 +29,7 @@ const Rutas = [
 { path: '/deportes/:deporte', element: <FutbolM /> },
 
 { path: '/login', element: <Login /> },
+{ path: '/usuario/jugadores', element: <Jugadores /> },
 { path: '/usuario/socios', element: <Socios /> },
 { path: '/usuario/nuevosocio', element: <Nuevosocio /> },
 { path: '/usuario/socio/:id', element: <Socioadmin /> },
